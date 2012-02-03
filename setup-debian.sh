@@ -369,7 +369,7 @@ function install_drupal {
     cp "/var/www/$1/sites/default/default.settings.php" "/var/www/$1/sites/default/settings.php"
 	chmod 777 /var/www/$1/sites/default/settings.php
 	mkdir /var/www/$1/sites/default/files
-	chmod -R 775 /var/www/$1/sites/default/files
+	chmod -R 777 /var/www/$1/sites/default/files
     mysqladmin create "$dbname"
     echo "GRANT ALL PRIVILEGES ON \`$dbname\`.* TO \`$userid\`@localhost IDENTIFIED BY '$passwd';" | \
         mysql
