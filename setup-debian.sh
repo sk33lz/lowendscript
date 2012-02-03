@@ -442,7 +442,7 @@ system)
     install_dropbear
     ;;
 drupal)
-    install_drupal
+    install_drupal $2
 	;;
 wordpress)
     install_wordpress $2
