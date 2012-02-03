@@ -346,10 +346,14 @@ function install_drupal {
 
     # Setting up the MySQL database
     dbname=`echo $1 | tr . _`
+	
+	# MySQL dbname cannot be more than 15 characters long
+    dbname="${dbname:0:15}"
+	
 	#Echo DB Name
 	COL_BLUE="\x1b[34;01m"
     COL_RESET="\x1b[39;49;00m"
-    echo -e $COL_BLUE"Database Name: "$COL_RESET"echo $1 | tr . _"
+    echo -e $COL_BLUE"Database Name: "$COL_RESET"$(dbname:0:15)"
     userid=`get_domain_name $1`
 	
     # MySQL userid cannot be more than 15 characters long
@@ -357,7 +361,7 @@ function install_drupal {
 	# Echo DB USer value
 	echo -e $COL_BLUE"Database User: "$COL_RESET"${userid:0:15}"
     passwd=`get_password "$userid@mysql"`
-	echo -e $COL_BLUE"Database User: "$COL_RESET"$userid@mysql"
+	echo -e $COL_BLUE"Database Password: "$COL_RESET"$userid@mysql"
     cp "/var/www/$1/sites/default/default.settings.php" "/var/www/$1/sites/default/settings.php"
     mysqladmin create "$dbname"
     echo "GRANT ALL PRIVILEGES ON \`$dbname\`.* TO \`$userid\`@localhost IDENTIFIED BY '$passwd';" | \
