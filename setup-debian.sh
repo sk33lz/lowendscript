@@ -299,6 +299,7 @@ function install_wordpress {
 
     # Setting up the MySQL database
     dbname=`echo $1 | tr . _`
+	echo Database Name = 'echo $1 | tr . _'
     userid=`get_domain_name $1`
     # MySQL userid cannot be more than 15 characters long
     userid="${userid:0:15}"
@@ -306,6 +307,50 @@ function install_wordpress {
     cp "/var/www/$1/wp-config-sample.php" "/var/www/$1/wp-config.php"
     sed -i "s/database_name_here/$dbname/; s/username_here/$userid/; s/password_here/$passwd/" \
         "/var/www/$1/wp-config.php"
+    mysqladmin create "$dbname"
+    echo "GRANT ALL PRIVILEGES ON \`$dbname\`.* TO \`$userid\`@localhost IDENTIFIED BY '$passwd';" | \
+        mysql
+
+    # Setting up Nginx mapping
+    cat > "/etc/nginx/sites-enabled/$1.conf" <<END
+server {
+    server_name $1;
+    root /var/www/$1;
+    include /etc/nginx/fastcgi_php;
+    location / {
+        index index.php;
+        if (!-e \$request_filename) {
+            rewrite ^(.*)$  /index.php last;
+        }
+    }
+}
+END
+    invoke-rc.d nginx reload
+}
+
+function install_drupal {
+    check_install wget php5-gd
+    if [ -z "$1" ]
+    then
+        die "Usage: `basename $0` drupal <hostname>"
+    fi
+
+    # Downloading the Drupal' latest and greatest distribution.
+    mkdir /tmp/drupal.$$
+    wget -O - http://ftp.drupal.org/files/projects/drupal-7.12.tar.gz | \
+        tar zxf - -C /tmp/drupal.$$/
+    mkdir /var/www/$1
+    cp -Rf /tmp/drupal.$$/drupal*/* "/var/www/$1"
+    rm -rf /tmp/drupal*
+    chown root:root -R "/var/www/$1"
+
+    # Setting up the MySQL database
+    dbname=`echo $1 | tr . _`
+    userid=`get_domain_name $1`
+    # MySQL userid cannot be more than 15 characters long
+    userid="${userid:0:15}"
+    passwd=`get_password "$userid@mysql"`
+    cp "/var/www/$1/sites/default/default.settings.php" "/var/www/$1/sites/default/settings.php"
     mysqladmin create "$dbname"
     echo "GRANT ALL PRIVILEGES ON \`$dbname\`.* TO \`$userid\`@localhost IDENTIFIED BY '$passwd';" | \
         mysql
@@ -396,13 +441,16 @@ system)
     install_syslogd
     install_dropbear
     ;;
+drupal)
+    install_drupal
+	;;
 wordpress)
     install_wordpress $2
     ;;
 *)
     echo 'Usage:' `basename $0` '[option]'
     echo 'Available option:'
-    for option in system exim4 mysql nginx php wordpress
+    for option in system exim4 mysql nginx php wordpress drupal
     do
         echo '  -' $option
     done
