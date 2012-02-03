@@ -329,11 +329,14 @@ END
 }
 
 function install_drupal {
-    check_install wget php5-gd
+    check_install wget
     if [ -z "$1" ]
     then
         die "Usage: `basename $0` drupal <hostname>"
     fi
+	
+	#Download PHP5-gd package
+	apt-get -q -y install php5-gd
 
     # Downloading the Drupal' latest and greatest distribution.
     mkdir /tmp/drupal.$$
