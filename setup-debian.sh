@@ -167,9 +167,9 @@ function install_php {
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 NAME="php-cgi"
 DESC="php-cgi"
-PIDFILE="/var/run/www/php.pid"
+PIDFILE="/var/lib/www/php.pid"
 FCGIPROGRAM="/usr/bin/php-cgi"
-FCGISOCKET="/var/run/www/php.sock"
+FCGISOCKET="/var/lib/www/php.sock"
 FCGIUSER="www-data"
 FCGIGROUP="www-data"
 
@@ -222,8 +222,8 @@ esac
 exit 0
 END
     chmod 755 /etc/init.d/php-cgi
-    mkdir -p /var/run/www
-    chown www-data:www-data /var/run/www
+    mkdir -p /var/lib/www
+    chown www-data:www-data /var/lib/www
 
     cat > /etc/nginx/fastcgi_php <<END
 location ~ \.php$ {
@@ -232,7 +232,7 @@ location ~ \.php$ {
     fastcgi_index index.php;
     fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
     if (-f \$request_filename) {
-        fastcgi_pass unix:/var/run/www/php.sock;
+        fastcgi_pass unix:/var/lib/www/php.sock;
     }
 }
 END
@@ -329,7 +329,7 @@ END
 }
 
 function install_drupal {
-    check_install wget php5-gd
+    check_install wget
     if [ -z "$1" ]
     then
         die "Usage: `basename $0` drupal <hostname>"
