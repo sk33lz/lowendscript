@@ -367,7 +367,7 @@ function install_drupal {
     passwd=`get_password "$userid@mysql"`
 	echo -e $COL_BLUE"Database Password: "$COL_RESET"$userid@mysql"
     cp "/var/www/$1/sites/default/default.settings.php" "/var/www/$1/sites/default/settings.php"
-	chmod 777 settings.php
+	chmod 777 /var/www/$1/sites/default/settings.php
 	mkdir /var/www/$1/sites/default/files
 	chmod -R 775 /var/www/$1/sites/default/files
     mysqladmin create "$dbname"
