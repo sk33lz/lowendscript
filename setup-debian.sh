@@ -328,7 +328,70 @@ END
     invoke-rc.d nginx reload
 }
 
-function install_drupal {
+function install_drupal6 {
+    check_install wget
+    if [ -z "$1" ]
+    then
+        die "Usage: `basename $0` drupal <hostname>"
+    fi
+	
+	#Download PHP5-gd package
+	apt-get -q -y install php5-gd
+    /etc/init.d/php-cgi restart
+	
+    # Downloading the Drupal' latest and greatest distribution.
+    mkdir /tmp/drupal.$$
+    wget -O - http://ftp.drupal.org/files/projects/drupal-6.24.tar.gz | \
+        tar zxf - -C /tmp/drupal.$$/
+    mkdir /var/www/$1
+    cp -Rf /tmp/drupal.$$/drupal*/* "/var/www/$1"
+    rm -rf /tmp/drupal*
+    chown root:root -R "/var/www/$1"
+
+    # Setting up the MySQL database
+    dbname=`echo $1 | tr . _`
+	
+	# MySQL dbname cannot be more than 15 characters long
+    dbname="${dbname:0:15}"
+	
+	#Echo DB Name
+	COL_BLUE="\x1b[34;01m"
+    COL_RESET="\x1b[39;49;00m"
+    echo -e $COL_BLUE"Database Name: "$COL_RESET"$dbname"
+    userid=`get_domain_name $1`
+	
+    # MySQL userid cannot be more than 15 characters long
+    userid="${userid:0:15}"
+	# Echo DB USer value
+	echo -e $COL_BLUE"Database User: "$COL_RESET"${userid:0:15}"
+    passwd=`get_password "$userid@mysql"`
+	echo -e $COL_BLUE"Database Password: "$COL_RESET"$passwd"
+    cp "/var/www/$1/sites/default/default.settings.php" "/var/www/$1/sites/default/settings.php"
+	chmod 777 /var/www/$1/sites/default/settings.php
+	mkdir /var/www/$1/sites/default/files
+	chmod -R 777 /var/www/$1/sites/default/files
+    mysqladmin create "$dbname"
+    echo "GRANT ALL PRIVILEGES ON \`$dbname\`.* TO \`$userid\`@localhost IDENTIFIED BY '$passwd';" | \
+        mysql
+
+    # Setting up Nginx mapping
+    cat > "/etc/nginx/sites-enabled/$1.conf" <<END
+server {
+    server_name $1;
+    root /var/www/$1;
+    include /etc/nginx/fastcgi_php;
+    location / {
+        index index.php;
+        if (!-e \$request_filename) {
+            rewrite ^(.*)$  /index.php last;
+        }
+    }
+}
+END
+    invoke-rc.d nginx reload
+}
+
+function install_drupal7 {
     check_install wget
     if [ -z "$1" ]
     then
@@ -460,8 +523,11 @@ system)
     install_syslogd
     install_dropbear
     ;;
-drupal)
-    install_drupal $2
+drupal6)
+    install_drupal6 $2
+	;;
+drupal7)
+    install_drupal7 $2
 	;;
 wordpress)
     install_wordpress $2
