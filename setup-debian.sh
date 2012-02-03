@@ -337,7 +337,8 @@ function install_drupal {
 	
 	#Download PHP5-gd package
 	apt-get -q -y install php5-gd
-
+    /etc/init.d/php-cgi restart
+	
     # Downloading the Drupal' latest and greatest distribution.
     mkdir /tmp/drupal.$$
     wget -O - http://ftp.drupal.org/files/projects/drupal-7.12.tar.gz | \
