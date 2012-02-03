@@ -383,7 +383,7 @@ server {
     location / {
         index index.php;
         if (!-e \$request_filename) {
-            rewrite ^(.*)$  /index.php?q=$request_uri last;
+            rewrite ^(.*)$  /index.php?q=\$1 last;
         }
     }
 }
@@ -446,7 +446,7 @@ server {
     location / {
         index index.php;
         if (!-e \$request_filename) {
-            rewrite ^(.*)$  /index.php?q=$request_uri last;
+            rewrite ^(.*)$  /index.php?q=\$1 last;
         }
     }
 }
