@@ -329,7 +329,7 @@ END
 }
 
 function install_drupal {
-    check_install wget
+    check_install wget php5-gd
     if [ -z "$1" ]
     then
         die "Usage: `basename $0` drupal <hostname>"
