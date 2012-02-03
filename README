@@ -5,7 +5,8 @@ A simple bash shell script to optimize your Debian or Ubuntu server for serving 
 * Debian 5
 
 #INSTALLATION
-Download setup-debian.sh using one of the following commands.
+Download setup-debian.sh using one of the following commands:
+
 git clone git://github.com/lowendbox/lowendscript.git
 
 or
@@ -14,19 +15,31 @@ wget --no-check-certificate https://github.com/lowendbox/lowendscript/raw/master
 
 #USAGE
 * Install System Tools - Installs Dropbear, cron, and inetutils-syslog (replaces rsyslog)
-    bash setup-debian.sh system
+    
+	bash setup-debian.sh system
+
 * Install Exim4 - Replacement for sendmail - Re-configured to allow Internet delivery.
     bash setup-debian.sh exim4
+
 * Install Nginx for HTTP - Low memory footprint httpd replacement for Apache.
-    bash setup-debian.sh nginx
+    
+	bash setup-debian.sh nginx
+
 * Install MySQL for Database - Re-configured to remove innodb support, remove query cache, and reduce key buffer size.
-    bash setup-debian.sh mysql
+    
+	bash setup-debian.sh mysql
+
 * Install PHP - Built-in FastCGI running only 1 child process with respawn after 5,000 request.
-    bash setup-debian.sh php
+    
+	bash setup-debian.sh php
+
 * Install Wordpress - Installs the latet version of Wordpress and creates DB, DB user, and DB user pass.
-    bash setup-debian.sh wordpress blog.example.com
+    
+	bash setup-debian.sh wordpress blog.example.com
+
 * Install Drupal - Installs the latest version of Drupal 7 and creates DB, DB user, and DB user pass.
-    bash setup-debian.sh drupal cms.example.com
+    
+	bash setup-debian.sh drupal cms.example.com
 
 #SOFTWARE STACK
 * Dropbear - Replaces openssh. Invoked from xinetd.
@@ -34,5 +47,5 @@ wget --no-check-certificate https://github.com/lowendbox/lowendscript/raw/master
 * Exim4 - Replaces sendmail (if installed). Re-configured to allow Internet delivery.
 * Cron - Schedule tasks on your server.
 * Nginx - Lightweight httpd replacement for Apache httpd.
-* MySQL - Optimized with innodb and query caching removed. Also a reduced key buffer size. 
+* MySQL - Optimized with innodb and query caching removed with reduced key buffer size. 
 * PHP - Optimized PHP built with FastCGI and only running 1 child process which respawns ever 5,000 requests.
