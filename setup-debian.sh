@@ -365,7 +365,7 @@ function install_drupal {
 	# Echo DB USer value
 	echo -e $COL_BLUE"Database User: "$COL_RESET"${userid:0:15}"
     passwd=`get_password "$userid@mysql"`
-	echo -e $COL_BLUE"Database Password: "$COL_RESET"$userid@mysql"
+	echo -e $COL_BLUE"Database Password: "$COL_RESET"$passwd"
     cp "/var/www/$1/sites/default/default.settings.php" "/var/www/$1/sites/default/settings.php"
 	chmod 777 /var/www/$1/sites/default/settings.php
 	mkdir /var/www/$1/sites/default/files
