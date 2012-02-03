@@ -353,7 +353,7 @@ function install_drupal {
 	#Echo DB Name
 	COL_BLUE="\x1b[34;01m"
     COL_RESET="\x1b[39;49;00m"
-    echo -e $COL_BLUE"Database Name: "$COL_RESET"$(dbname:0:15)"
+    echo -e $COL_BLUE"Database Name: "$COL_RESET"$dbname"
     userid=`get_domain_name $1`
 	
     # MySQL userid cannot be more than 15 characters long
