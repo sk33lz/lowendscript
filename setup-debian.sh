@@ -354,18 +354,14 @@ function install_drupal6 {
 	# MySQL dbname cannot be more than 15 characters long
     dbname="${dbname:0:15}"
 	
-	#Echo DB Name
-	COL_BLUE="\x1b[34;01m"
-    COL_RESET="\x1b[39;49;00m"
-    echo -e $COL_BLUE"Database Name: "$COL_RESET"$dbname"
+	
     userid=`get_domain_name $1`
 	
     # MySQL userid cannot be more than 15 characters long
     userid="${userid:0:15}"
-	# Echo DB User value
-	echo -e $COL_BLUE"Database User: "$COL_RESET"${userid:0:15}"
+	
     passwd=`get_password "$userid@mysql"`
-	echo -e $COL_BLUE"Database Password: "$COL_RESET"$passwd"
+	
     cp "/var/www/$1/sites/default/default.settings.php" "/var/www/$1/sites/default/settings.php"
 	chmod 777 /var/www/$1/sites/default/settings.php
 	mkdir /var/www/$1/sites/default/files
@@ -392,6 +388,22 @@ server {
 }
 END
     invoke-rc.d nginx reload
+	
+	
+	#Echo DB Name
+	echo -e $COL_BLUE"*** COPY FOR SAFE KEEPING ***"
+	COL_BLUE="\x1b[34;01m"
+    COL_RESET="\x1b[39;49;00m"
+    echo -e $COL_BLUE"Database Name: "$COL_RESET"$dbname"
+	
+    #Echo DB User value
+	echo -e $COL_BLUE"Database User: "$COL_RESET"${userid:0:15}"
+	
+	#Echo DB Password
+	echo -e $COL_BLUE"Database Password: "$COL_RESET"$passwd"
+	
+	#Echo Install URL
+	echo -e $COL_BLUE"Visit: http://$1/install.php to finalize your Drupal 6 installation."
 }
 
 function install_drupal7 {
