@@ -375,7 +375,7 @@ function install_drupal6 {
         mysql
 
 	#Copy DB Name, User, and Pass to settings.php and set to read only.
-	sed "91 s/\/username/$userid/g; s/\:password/$passwd/g; s/\databasename/$dbname/g" /var/www/$1/sites/default/settings.php
+	sed "91 s/\/username/$userid/g; s/\:password/\:$passwd/g; s/\databasename/$dbname/g" /var/www/$1/sites/default/settings.php
 	
     # Setting up Nginx mapping
     cat > "/etc/nginx/sites-enabled/$1.conf" <<END
