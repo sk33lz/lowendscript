@@ -398,7 +398,7 @@ END
 	echo -e $COL_BLUE"Database Password: "$COL_RESET"$passwd"
 	
 	#Echo Install URL
-	echo -e $COL_BLUE"Visit to finalize installation: http://$1/install.php"
+	echo -e $COL_BLUE"Visit to finalize installation: "$COL_RESET"http://$1/install.php"
 }
 
 function install_drupal7 {
