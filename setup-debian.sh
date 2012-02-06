@@ -353,15 +353,10 @@ function install_drupal6 {
 	
 	# MySQL dbname cannot be more than 15 characters long
     dbname="${dbname:0:15}"
-	
-	
     userid=`get_domain_name $1`
-	
     # MySQL userid cannot be more than 15 characters long
     userid="${userid:0:15}"
-	
     passwd=`get_password "$userid@mysql"`
-	
     cp "/var/www/$1/sites/default/default.settings.php" "/var/www/$1/sites/default/settings.php"
 	chmod 777 /var/www/$1/sites/default/settings.php
 	mkdir /var/www/$1/sites/default/files
@@ -372,7 +367,7 @@ function install_drupal6 {
 
 	#Copy DB Name, User, and Pass to settings.php and set to read only.
 	sed -i "91 s/username/$userid/; 91 s/password/$passwd/; 91 s/databasename/$dbname/" "/var/www/$1/sites/default/settings.php"
-	
+	chmod 644 /var/www/$1/sites/default/settings.php
     # Setting up Nginx mapping
     cat > "/etc/nginx/sites-enabled/$1.conf" <<END
 server {
