@@ -362,7 +362,7 @@ function install_drupal6 {
 	
     # MySQL userid cannot be more than 15 characters long
     userid="${userid:0:15}"
-	# Echo DB USer value
+	# Echo DB User value
 	echo -e $COL_BLUE"Database User: "$COL_RESET"${userid:0:15}"
     passwd=`get_password "$userid@mysql"`
 	echo -e $COL_BLUE"Database Password: "$COL_RESET"$passwd"
@@ -374,6 +374,11 @@ function install_drupal6 {
     echo "GRANT ALL PRIVILEGES ON \`$dbname\`.* TO \`$userid\`@localhost IDENTIFIED BY '$passwd';" | \
         mysql
 
+	#Copy DB Name, User, and Pass to settings.php and set to read only.
+	sed '90,s/\/username/$userid' /var/www/$1/sites/default/settings.php
+	sed '90,s/\:password/$passwd' /var/www/$1/sites/default/settings.php
+	sed '90,s/\databasename/$dbname' /var/www/$1/sites/default/settings.php
+	
     # Setting up Nginx mapping
     cat > "/etc/nginx/sites-enabled/$1.conf" <<END
 server {
