@@ -448,15 +448,12 @@ function install_drupal7 {
         mysql
 		
     #Copy DB Name, User, and Pass to settings.php and set to read only.
-    cat > "/var/www/$1/sites/default/settings.php" <<END
-$databases['default']['default'] = array(
+    sed -i "1i $databases['default']['default'] = array(
   'driver' => 'mysql',
    'database' => '$dbname',
    'username' => '$userid',
    'password' => '$passwd',
-   'host' => 'localhost',
-);
-END
+   'host' => 'localhost'," "/var/www/$1/sites/default/settings.php"
     chmod 644 /var/www/$1/sites/default/settings.php
 	
 	#Echo DB Name
