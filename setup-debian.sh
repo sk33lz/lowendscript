@@ -545,7 +545,7 @@ wordpress)
 *)
     echo 'Usage:' `basename $0` '[option]'
     echo 'Available option:'
-    for option in system exim4 mysql nginx php wordpress drupal
+    for option in system exim4 mysql nginx php wordpress drupal6 drupal7
     do
         echo '  -' $option
     done
