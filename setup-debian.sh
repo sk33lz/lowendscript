@@ -353,8 +353,10 @@ function install_drupal6 {
 	
 	# MySQL dbname cannot be more than 15 characters long
     dbname="${dbname:0:15}"
-    userid=`get_domain_name $1`
-    # MySQL userid cannot be more than 15 characters long
+    
+	userid=`get_domain_name $1`
+    
+	# MySQL userid cannot be more than 15 characters long
     userid="${userid:0:15}"
     passwd=`get_password "$userid@mysql"`
     cp "/var/www/$1/sites/default/default.settings.php" "/var/www/$1/sites/default/settings.php"
@@ -368,7 +370,8 @@ function install_drupal6 {
 	#Copy DB Name, User, and Pass to settings.php and set to read only.
 	sed -i "91 s/username/$userid/; 91 s/password/$passwd/; 91 s/databasename/$dbname/" "/var/www/$1/sites/default/settings.php"
 	chmod 644 /var/www/$1/sites/default/settings.php
-    # Setting up Nginx mapping
+    
+	# Setting up Nginx mapping
     cat > "/etc/nginx/sites-enabled/$1.conf" <<END
 server {
     server_name $1;
@@ -427,25 +430,51 @@ function install_drupal7 {
 	# MySQL dbname cannot be more than 15 characters long
     dbname="${dbname:0:15}"
 	
-	#Echo DB Name
-	COL_BLUE="\x1b[34;01m"
-    COL_RESET="\x1b[39;49;00m"
-    echo -e $COL_BLUE"Database Name: "$COL_RESET"$dbname"
     userid=`get_domain_name $1`
 	
     # MySQL userid cannot be more than 15 characters long
     userid="${userid:0:15}"
-	# Echo DB USer value
-	echo -e $COL_BLUE"Database User: "$COL_RESET"${userid:0:15}"
     passwd=`get_password "$userid@mysql"`
-	echo -e $COL_BLUE"Database Password: "$COL_RESET"$passwd"
+	
+	# Copy default.settings.php to settings.php and set write permissions.
     cp "/var/www/$1/sites/default/default.settings.php" "/var/www/$1/sites/default/settings.php"
 	chmod 777 /var/www/$1/sites/default/settings.php
 	mkdir /var/www/$1/sites/default/files
 	chmod -R 777 /var/www/$1/sites/default/files
-    mysqladmin create "$dbname"
+    
+	# Create MySQL database
+	mysqladmin create "$dbname"
     echo "GRANT ALL PRIVILEGES ON \`$dbname\`.* TO \`$userid\`@localhost IDENTIFIED BY '$passwd';" | \
         mysql
+		
+    #Copy DB Name, User, and Pass to settings.php and set to read only.
+    cat > "/var/www/$1/sites/default/settings.php" <<END
+$databases['default']['default'] = array(
+  'driver' => 'mysql',
+   'database' => '$dbname',
+   'username' => '$userid',
+   'password' => '$passwd',
+   'host' => 'localhost',
+);
+END
+    chmod 644 /var/www/$1/sites/default/settings.php
+	
+	#Echo DB Name
+	echo -e $COL_BLUE"*** COPY FOR SAFE KEEPING ***"
+	COL_BLUE="\x1b[34;01m"
+    COL_RESET="\x1b[39;49;00m"
+    echo -e $COL_BLUE"Database Name: "$COL_RESET"$dbname"
+	
+    #Echo DB User value
+	echo -e $COL_BLUE"Database User: "$COL_RESET"${userid:0:15}"
+	
+	#Echo DB Password
+	echo -e $COL_BLUE"Database Password: "$COL_RESET"$passwd"
+	
+	#Echo Install URL
+	echo -e $COL_BLUE"Visit to finalize installation: "$COL_RESET"http://$1/install.php"
+	
+}
 
     # Setting up Nginx mapping
     cat > "/etc/nginx/sites-enabled/$1.conf" <<END
