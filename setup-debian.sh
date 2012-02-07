@@ -474,7 +474,7 @@ END
 	#Echo Install URL
 	echo -e $COL_BLUE"Visit to finalize installation: "$COL_RESET"http://$1/install.php"
 	
-}
+
 
     # Setting up Nginx mapping
     cat > "/etc/nginx/sites-enabled/$1.conf" <<END
