@@ -453,7 +453,7 @@ function install_drupal7 {
     echo "'database' => '$dbname'," >> /var/www/$1/sites/default/settings.php
     echo "'username' => '$userid'," >> /var/www/$1/sites/default/settings.php
     echo "'password' => '$passwd'," >> /var/www/$1/sites/default/settings.php
-    echo "'host' => 'localhost'," >> /var/www/$1/sites/default/settings.php
+    echo "'host' => 'localhost');" >> /var/www/$1/sites/default/settings.php
     chmod 644 /var/www/$1/sites/default/settings.php
 	
 	#Echo DB Name
