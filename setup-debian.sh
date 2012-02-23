@@ -329,7 +329,15 @@ END
 }
 
 function install_htmlsite {
-        # Setting up Nginx mapping
+    # Setup folder
+	mkdir /var/www/$1
+	
+	# Setup default index.html file
+	cat > "/var/www/$1/index.html" <<END
+Hello World
+END
+    
+    # Setting up Nginx mapping
     cat > "/etc/nginx/sites-enabled/$1.conf" <<END
 server {
     server_name $1;
