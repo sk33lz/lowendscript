@@ -328,6 +328,24 @@ END
     invoke-rc.d nginx reload
 }
 
+function install_htmlsite {
+        # Setting up Nginx mapping
+    cat > "/etc/nginx/sites-enabled/$1.conf" <<END
+server {
+    server_name $1;
+    root /var/www/$1;
+    include /etc/nginx/fastcgi_php;
+    location / {
+        index index.php index.html;
+        if (!-e \$request_filename) {
+            rewrite ^(.*)$  /index.php last;
+        }
+    }
+}
+END
+    service nginx restart
+}
+
 function install_drupal6 {
     check_install wget
     if [ -z "$1" ]
@@ -699,6 +717,9 @@ system)
     install_syslogd
     install_dropbear
     ;;
+htmlsite)
+    install_htmlsite $2
+	;;
 drupal6)
     install_drupal6 $2
 	;;
@@ -711,7 +732,7 @@ wordpress)
 *)
     echo 'Usage:' `basename $0` '[option]'
     echo 'Available option:'
-    for option in system exim4 mysql nginx php wordpress drupal6 drupal7
+    for option in system exim4 mysql nginx php wordpress drupal6 drupal7 htmlsite
     do
         echo '  -' $option
     done
