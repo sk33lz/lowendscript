@@ -18,42 +18,58 @@ This script should be run by the root user for maximum compatibility.
 
 * Install System Tools 
   - Installs Dropbear, cron, and inetutils-syslog (replaces rsyslog)
-Command:    
+
+  Command:    
+  
   bash setup-debian.sh system
 
 * Install Exim4 Mail Server 
   - Lightweight replacement for sendmail. Re-configured to allow Internet delivery.
-Command:    
+
+  Command:    
+  
   bash setup-debian.sh exim4
 
 * Install Nginx HTTP Server
   - Low memory footprint httpd replacement for Apache web server.
-Command:    
+
+  Command:    
+  
   bash setup-debian.sh nginx
 
 * Install MySQL Database Server
   - Re-configured to remove innodb support, remove query cache, and reduce key buffer size.
-Command:    
+
+  Command:    
+  
   bash setup-debian.sh mysql
 
 * Install PHP FastCGI.
   - Built-in FastCGI running only 1 child process with respawn after 5,000 request.
-Command:    
+
+  Command:    
+  
   bash setup-debian.sh php
 
 * Install Wordpress 
   - Installs the latet version of Wordpress. Then creates the Virtual Host configuration for the domain supplied in the command, the MySQL Database, the Database User, and the Database User Password.
-Example Command: (Creates a Wordpress site for example.com in /var/www/)    
+
+  Example Command: (Creates a Wordpress site for example.com in /var/www/)    
+  
   bash setup-debian.sh wordpress example.com
 
 * Install Drupal 6 
   - Installs the latest version of Drupal 6. Then creates the Virtual Host configuration for the domain supplied in the command, the MySQL Database, the Database User, and the Database User Password..
-Example Command:  (Creates a Drupal 6 installation for example.com in /var/www/example.com)  
+
+  Example Command:  (Creates a Drupal 6 installation for example.com in /var/www/example.com)  
+  
   bash setup-debian.sh drupal6 example.com
   
 * Install Drupal 7 
   - Installs the latest version of Drupal 7. Then creates the Virtual Host configuration for the domain supplied in the command, the MySQL Database, the Database User, and the Database User Password..
-Example Command:  (Creates a Drupal 7 installation for example.com in /var/www/example.com)  
+
+  Example Command:  (Creates a Drupal 7 installation for example.com in /var/www/example.com)  
+  
   bash setup-debian.sh drupal7 example.com
 
 #SOFTWARE STACK
