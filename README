@@ -1,8 +1,8 @@
-A simple bash shell script to optimize your Debian or Ubuntu server for serving PHP and MySQL driven website platforms like Drupal and Wordpress.
+A simple bash shell script to optimize your Debian or Ubuntu VPS server for serving PHP and MySQL driven website platforms like Drupal and Wordpress.
 
 #TESTED ON
-* Ubuntu 10.04
-* Debian 5
+* Ubuntu 10.04 LTS, Ubuntu 12.04 LTS
+* Debian 5, Debian 6
 
 #INSTALLATION
 Download setup-debian.sh using one of the following commands:
@@ -18,43 +18,43 @@ This script should be run by the root user for maximum compatibility.
 
 * Install System Tools 
   - Installs Dropbear, cron, and inetutils-syslog (replaces rsyslog)
-    
+Command:    
   bash setup-debian.sh system
 
-* Install Exim4 - Replacement for sendmail 
-  - Re-configured to allow Internet delivery.
-    
+* Install Exim4 Mail Server 
+  - Lightweight replacement for sendmail. Re-configured to allow Internet delivery.
+Command:    
   bash setup-debian.sh exim4
 
-* Install Nginx for HTTP 
-  - Low memory footprint httpd replacement for Apache.
-    
+* Install Nginx HTTP Server
+  - Low memory footprint httpd replacement for Apache web server.
+Command:    
   bash setup-debian.sh nginx
 
-* Install MySQL for Database 
+* Install MySQL Database Server
   - Re-configured to remove innodb support, remove query cache, and reduce key buffer size.
-    
+Command:    
   bash setup-debian.sh mysql
 
-* Install PHP 
+* Install PHP FastCGI.
   - Built-in FastCGI running only 1 child process with respawn after 5,000 request.
-    
+Command:    
   bash setup-debian.sh php
 
 * Install Wordpress 
-  - Installs the latet version of Wordpress and creates DB, DB user, and DB user pass.
-    
-  bash setup-debian.sh wordpress blog.example.com
+  - Installs the latet version of Wordpress. Then creates the Virtual Host configuration for the domain supplied in the command, the MySQL Database, the Database User, and the Database User Password.
+Example Command: (Creates a Wordpress site for example.com in /var/www/)    
+  bash setup-debian.sh wordpress example.com
 
 * Install Drupal 6 
-  - Installs the latest version of Drupal 7 and creates DB, DB user, and DB user pass.
-    
-  bash setup-debian.sh drupal6 cms.example.com
+  - Installs the latest version of Drupal 6. Then creates the Virtual Host configuration for the domain supplied in the command, the MySQL Database, the Database User, and the Database User Password..
+Example Command:  (Creates a Drupal 6 installation for example.com in /var/www/example.com)  
+  bash setup-debian.sh drupal6 example.com
   
 * Install Drupal 7 
-  - Installs the latest version of Drupal 7 and creates DB, DB user, and DB user pass.
-    
-  bash setup-debian.sh drupal7 cms.example.com
+  - Installs the latest version of Drupal 7. Then creates the Virtual Host configuration for the domain supplied in the command, the MySQL Database, the Database User, and the Database User Password..
+Example Command:  (Creates a Drupal 7 installation for example.com in /var/www/example.com)  
+  bash setup-debian.sh drupal7 example.com
 
 #SOFTWARE STACK
 * Dropbear 
@@ -64,9 +64,9 @@ This script should be run by the root user for maximum compatibility.
 * Exim4 
   - Replaces sendmail (if installed). Re-configured to allow Internet delivery.
 * Cron 
-  - Schedule tasks on your server.
+  - Schedule tasks on your server, similar to that of the task manager in Windows.
 * Nginx 
-  - Lightweight httpd replacement for Apache httpd.
+  - Lightweight httpd replacement for Apache web server.
 * MySQL 
   - Optimized with innodb and query caching removed with reduced key buffer size. 
 * PHP 
