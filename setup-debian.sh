@@ -367,7 +367,7 @@ function install_drupal6 {
 	
     # Downloading the Drupal' latest and greatest distribution.
     mkdir /tmp/drupal.$$
-    wget -O - http://ftp.drupal.org/files/projects/drupal-6.24.tar.gz | \
+    wget -O - http://ftp.drupal.org/files/projects/drupal-6.26.tar.gz | \
         tar zxf - -C /tmp/drupal.$$/
     mkdir /var/www/$1
     cp -Rf /tmp/drupal.$$/drupal*/* "/var/www/$1"
@@ -472,12 +472,6 @@ server {
                 include fastcgi_params;
                 fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
                 fastcgi_intercept_errors on;
-                # workaround as fastcgi_param cannot be used inside if statements
-                set \$https "";
-                if (\$scheme = https) {
-                  set \$https on;
-                }
-                fastcgi_param HTTPS \$https;
                 fastcgi_read_timeout 6000;
 }
 END
@@ -513,7 +507,7 @@ function install_drupal7 {
 	
     # Downloading the Drupal' latest and greatest distribution.
     mkdir /tmp/drupal.$$
-    wget -O - http://ftp.drupal.org/files/projects/drupal-7.12.tar.gz | \
+    wget -O - http://ftp.drupal.org/files/projects/drupal-7.14.tar.gz | \
         tar zxf - -C /tmp/drupal.$$/
     mkdir /var/www/$1
     cp -Rf /tmp/drupal.$$/drupal*/* "/var/www/$1"
@@ -644,12 +638,6 @@ server {
                 include fastcgi_params;
                 fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
                 fastcgi_intercept_errors on;
-                # workaround as fastcgi_param cannot be used inside if statements
-                set \$https "";
-                if (\$scheme = https) {
-                  set \$https on;
-                }
-                fastcgi_param HTTPS \$https;
                 fastcgi_read_timeout 6000;
 }
 END
