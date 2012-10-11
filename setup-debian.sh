@@ -746,7 +746,7 @@ function install_magento {
         }
      
         location ~ .php$ { ## Execute PHP scripts
-            if (!-e $request_filename) { rewrite / /index.php last; } ## Catch 404s that try_files miss
+            #if (!-e $request_filename) { rewrite / /index.php last; } ## Catch 404s that try_files miss
      
             expires        off; ## Do not cache dynamic content
             fastcgi_pass   127.0.0.1:9000;
