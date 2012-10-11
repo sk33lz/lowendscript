@@ -738,6 +738,21 @@ END
   invoke-rc.d nginx reload
 }
 
+function install_mariadb {
+  sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xcbcb082a1bb943db
+  sudo apt-get update
+  sudo apt-get install mariadb-server-5.5
+}
+
+function install_csf {
+  mkdir /tmp/configserver.$$
+    wget -O - http://www.configserver.com/free/csf.tgz | \
+        tar zxf - -C /tmp/configserver.$$
+	cd /tmp/configserver.$$
+	sh install.sh
+	rm -rf /tmp/configserver*
+}
+
 function print_info {
     echo -n -e '\e[1;36m'
     echo -n $1
