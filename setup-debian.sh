@@ -157,6 +157,7 @@ END
 	mkdir -p /var/www/vhosts/drupal6
 	mkdir -p /var/www/vhosts/magento
 	mkdir -p /var/www/vhosts/html
+	mkdir -p /var/www/vhosts/wordpress
 	chown -R root:root /var/www
 }
 
