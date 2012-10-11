@@ -744,6 +744,12 @@ END
 
 function install_mariadb {
   sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xcbcb082a1bb943db
+  cat > "/etc/apt/sources.list.d/MariaDB.list" <<END
+  # MariaDB 5.5 repository list - created 2012-10-11 21:37 UTC
+  # http://downloads.mariadb.org/mariadb/repositories/
+  deb http://ftp.osuosl.org/pub/mariadb/repo/5.5/ubuntu precise main
+  deb-src http://ftp.osuosl.org/pub/mariadb/repo/5.5/ubuntu precise main
+END
   sudo apt-get update
   sudo apt-get install mariadb-server-5.5
 }
