@@ -472,12 +472,6 @@ server {
                 include fastcgi_params;
                 fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
                 fastcgi_intercept_errors on;
-                # workaround as fastcgi_param cannot be used inside if statements
-                set \$https "";
-                if (\$scheme = https) {
-                  set \$https on;
-                }
-                fastcgi_param HTTPS \$https;
                 fastcgi_read_timeout 6000;
 }
 END
@@ -644,12 +638,6 @@ server {
                 include fastcgi_params;
                 fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
                 fastcgi_intercept_errors on;
-                # workaround as fastcgi_param cannot be used inside if statements
-                set \$https "";
-                if (\$scheme = https) {
-                  set \$https on;
-                }
-                fastcgi_param HTTPS \$https;
                 fastcgi_read_timeout 6000;
 }
 END
