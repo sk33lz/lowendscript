@@ -754,6 +754,21 @@ function install_magento {
     }
 END
   invoke-rc.d nginx reload
+  
+  #Echo DB Name
+	echo -e $COL_BLUE"*** COPY FOR SAFE KEEPING ***"
+	COL_BLUE="\x1b[34;01m"
+    COL_RESET="\x1b[39;49;00m"
+    echo -e $COL_BLUE"Database Name: "$COL_RESET"$dbname"
+	
+    #Echo DB User value
+	echo -e $COL_BLUE"Database User: "$COL_RESET"${userid:0:15}"
+	
+	#Echo DB Password
+	echo -e $COL_BLUE"Database Password: "$COL_RESET"$passwd"
+	
+	#Echo Install URL
+	echo -e $COL_BLUE"Visit to finalize installation: "$COL_RESET"http://$1/install.php"
 }
 
 function install_mariadb {
