@@ -367,7 +367,7 @@ function install_drupal6 {
 	
     # Downloading the Drupal' latest and greatest distribution.
     mkdir /tmp/drupal.$$
-    wget -O - http://ftp.drupal.org/files/projects/drupal-6.24.tar.gz | \
+    wget -O - http://ftp.drupal.org/files/projects/drupal-6.26.tar.gz | \
         tar zxf - -C /tmp/drupal.$$/
     mkdir /var/www/$1
     cp -Rf /tmp/drupal.$$/drupal*/* "/var/www/$1"
@@ -513,7 +513,7 @@ function install_drupal7 {
 	
     # Downloading the Drupal' latest and greatest distribution.
     mkdir /tmp/drupal.$$
-    wget -O - http://ftp.drupal.org/files/projects/drupal-7.12.tar.gz | \
+    wget -O - http://ftp.drupal.org/files/projects/drupal-7.15.tar.gz | \
         tar zxf - -C /tmp/drupal.$$/
     mkdir /var/www/$1
     cp -Rf /tmp/drupal.$$/drupal*/* "/var/www/$1"
@@ -654,6 +654,100 @@ server {
 }
 END
     invoke-rc.d nginx reload
+}
+
+function install_magento {
+  ##Check for Wget
+  check_install wget
+    if [ -z "$1" ]
+    then
+        die "Usage: `basename $0` magento <hostname>"
+    fi
+  #Download PHP5-gd package
+  apt-get -q -y install php5-gd
+  /etc/init.d/php-cgi restart
+	
+  # Downloading the Magento's latest and greatest distribution.
+  mkdir /tmp/magento.$$
+  wget -O - http://www.magentocommerce.com/downloads/assets/1.7.0.2/magento-1.7.0.2.tar.gz | \
+  tar zxf - -C /tmp/magento.$$/
+  mkdir /var/www/$1
+  cp -Rf /tmp/magento.$$/magento*/* "/var/www/$1"
+  rm -rf /tmp/magento*
+  chown root:root -R "/var/www/$1"
+
+  # Setting up the MySQL database
+  dbname=`echo $1 | tr . _`
+	
+  # MySQL dbname cannot be more than 15 characters long
+  dbname="${dbname:0:15}"
+  userid=`get_domain_name $1`
+	
+  # MySQL userid cannot be more than 15 characters long
+  userid="${userid:0:15}"
+  passwd=`get_password "$userid@mysql"`
+  
+  # Setup Nginx Magento config file for domain.
+  cat > "/etc/nginx/sites-enabled/magento/$1.conf" <<END
+      server {
+        listen 80;
+        server_name $1;
+        rewrite / $scheme://$1$request_uri permanent; ## Forcibly remove www
+    }
+     
+    server {
+        listen 80 default;
+    ## SSL directives might go here
+        server_name $1 *.$1; ## Domain is here twice so server_name_in_redirect will not favor the www
+        root /var/www/vhosts/$1;
+     
+        location / {
+            index index.html index.php; ## Allow a static html file to be shown first
+            try_files $uri $uri/ @handler; ## If missing pass the URI to Magento's front handler
+            expires 30d; ## Assume all files are cachable
+        }
+     
+        ## These locations would be hidden by .htaccess normally
+        location ^~ /app/                { deny all; }
+        location ^~ /includes/           { deny all; }
+        location ^~ /lib/                { deny all; }
+        location ^~ /media/downloadable/ { deny all; }
+        location ^~ /pkginfo/            { deny all; }
+        location ^~ /report/config.xml   { deny all; }
+        location ^~ /var/                { deny all; }
+     
+        location /var/export/ { ## Allow admins only to view export folder
+            auth_basic           "Restricted"; ## Message shown in login window
+            auth_basic_user_file htpasswd; ## See /etc/nginx/htpassword
+            autoindex            on;
+        }
+     
+        location  /. { ## Disable .htaccess and other hidden files
+            return 404;
+        }
+     
+        location @handler { ## Magento uses a common front handler
+            rewrite / /index.php;
+        }
+     
+        location ~ .php/ { ## Forward paths like /js/index.php/x.js to relevant handler
+            rewrite ^(.*.php)/ $1 last;
+        }
+     
+        location ~ .php$ { ## Execute PHP scripts
+            if (!-e $request_filename) { rewrite / /index.php last; } ## Catch 404s that try_files miss
+     
+            expires        off; ## Do not cache dynamic content
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_param  HTTPS $fastcgi_https;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            fastcgi_param  MAGE_RUN_CODE default; ## Store code is defined in administration > Configuration > Manage Stores
+            fastcgi_param  MAGE_RUN_TYPE store;
+            include        fastcgi_params; ## See /etc/nginx/fastcgi_params
+        }
+    }
+END
+  invoke-rc.d nginx reload
 }
 
 function print_info {
