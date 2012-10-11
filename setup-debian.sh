@@ -337,7 +337,7 @@ function install_htmlsite {
 	mkdir /var/www/vhosts/html/$1
 	
 	# Setup default index.html file
-	cat > "/var/www/$1/index.html" <<END
+	cat > "/var/www/vhosts/html/$1/index.html" <<END
 Hello World
 END
     
