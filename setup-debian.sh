@@ -686,9 +686,22 @@ function install_magento {
      
     server {
         listen 80 default;
-    ## SSL directives might go here
-        server_name $1 *.$1; ## Domain is here twice so server_name_in_redirect will not favor the www
-        root /var/www/vhosts/magento/$1;
+        
+		## SSL Configuration
+        listen 443 default ssl;
+        ssl_certificate     /etc/nginx/conf.d/$1.crt;
+        ssl_certificate_key /etc/nginx/conf.d/$1.key;
+		
+	    ##Configuration for Fooman Speedster
+	    rewrite ^/minify/([0-9]+)(/.*.(js|css))$ /lib/minify/m.php?f=$2&d=$1 last;
+        rewrite ^/skin/m/([0-9]+)(/.*.(js|css))$ /lib/minify/m.php?f=$2&d=$1 last;
+
+        location /lib/minify/ {
+          allow all;
+        }
+        
+		##Server Root
+		root /var/www/vhosts/magento/$1;
      
         location / {
             index index.html index.php; ## Allow a static html file to be shown first
