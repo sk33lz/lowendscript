@@ -158,6 +158,11 @@ END
 	mkdir -p /var/www/vhosts/magento
 	mkdir -p /var/www/vhosts/html
 	mkdir -p /var/www/vhosts/wordpress
+	mkdir -p /etc/nginx/sites-enabled/drupal7
+	mkdir -p /etc/nginx/sites-enabled/drupal6
+	mkdir -p /etc/nginx/sites-enabled/magento
+	mkdir -p /etc/nginx/sites-enabled/html
+	mkdir -p /etc/nginx/sites-enabled/wordpress
 	chown -R root:root /var/www
 }
 
