@@ -752,8 +752,6 @@ function install_magento {
             fastcgi_pass   127.0.0.1:9000;
             fastcgi_param  HTTPS $fastcgi_https;
             fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-            fastcgi_param  MAGE_RUN_CODE default; ## Store code is defined in administration > Configuration > Manage Stores
-            fastcgi_param  MAGE_RUN_TYPE store;
             include        fastcgi_params; ## See /etc/nginx/fastcgi_params
         }
     }
