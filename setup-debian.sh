@@ -660,7 +660,7 @@ function install_magento {
   mkdir /tmp/magento.$$
   wget -O - http://www.magentocommerce.com/downloads/assets/1.7.0.2/magento-1.7.0.2.tar.gz | \
   tar zxf - -C /tmp/magento.$$/
-  mkdir /var/www/$1
+  mkdir /var/www/vhosts/magento/$1
   cp -Rf /tmp/magento.$$/magento*/* "/var/www/vhosts/magento/$1"
   rm -rf /tmp/magento*
   chown root:root -R "/var/www/vhosts/magento/$1"
