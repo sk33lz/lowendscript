@@ -141,7 +141,11 @@ END
 }
 
 function install_nginx {
-    check_install nginx nginx
+    sudo -s
+    nginx=stable # use nginx=development for latest development version
+    add-apt-repository ppa:nginx/$nginx
+    apt-get update 
+    apt-get install nginx
     
     # Need to increase the bucket size for Debian 5.
     cat > /etc/nginx/conf.d/lowendbox.conf <<END
@@ -803,9 +807,15 @@ export PATH=/bin:/usr/bin:/sbin:/usr/sbin
 
 check_sanity
 case "$1" in
+csf)
+	install_csf
+	;;
 exim4)
     install_exim4
     ;;
+mariadb)
+	install_mariadb
+	;;
 mysql)
     install_mysql
     ;;
@@ -831,13 +841,15 @@ drupal6)
 drupal7)
     install_drupal7 $2
 	;;
+magento)
+	install_magento $2
 wordpress)
     install_wordpress $2
     ;;
 *)
     echo 'Usage:' `basename $0` '[option]'
     echo 'Available option:'
-    for option in system exim4 mysql nginx php wordpress drupal6 drupal7 htmlsite
+    for option in system csf exim4 mariadb mysql nginx php wordpress drupal6 drupal7 magento htmlsite
     do
         echo '  -' $option
     done
