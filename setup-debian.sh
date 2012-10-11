@@ -141,15 +141,18 @@ END
 }
 
 function install_nginx {
-    apt-get update 
+	apt-get update 
     apt-get install nginx
-    
+	
     # Need to increase the bucket size for Debian 5.
     cat > /etc/nginx/conf.d/lowendbox.conf <<END
 server_names_hash_bucket_size 64;
 END
 
     invoke-rc.d nginx restart
+	
+	mkdir -p /var/www
+	chown -R root:root /var/www
 }
 
 function install_php {
