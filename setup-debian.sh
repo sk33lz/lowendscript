@@ -152,6 +152,11 @@ END
     invoke-rc.d nginx restart
 	
 	mkdir -p /var/www
+	mkdir -p /var/www/vhosts
+	mkdir -p /var/www/vhosts/drupal7
+	mkdir -p /var/www/vhosts/drupal6
+	mkdir -p /var/www/vhosts/magento
+	mkdir -p /var/www/vhosts/html
 	chown -R root:root /var/www
 }
 
