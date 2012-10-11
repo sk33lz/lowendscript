@@ -158,11 +158,6 @@ END
 	mkdir -p /var/www/vhosts/magento
 	mkdir -p /var/www/vhosts/html
 	mkdir -p /var/www/vhosts/wordpress
-	mkdir -p /etc/nginx/sites-enabled/drupal7
-	mkdir -p /etc/nginx/sites-enabled/drupal6
-	mkdir -p /etc/nginx/sites-enabled/magento
-	mkdir -p /etc/nginx/sites-enabled/html
-	mkdir -p /etc/nginx/sites-enabled/wordpress
 	chown -R root:root /var/www
 }
 
@@ -327,7 +322,7 @@ function install_wordpress {
         mysql
 
     # Setting up Nginx mapping
-    cat > "/etc/nginx/sites-enabled/wordpress/$1.conf" <<END
+    cat > "/etc/nginx/sites-enabled/$1.conf" <<END
 server {
     server_name $1;
     root /var/www/vhosts/wordpress/$1;
@@ -413,7 +408,7 @@ function install_drupal6 {
 	chmod 644 /var/www/vhosts/drupal6/$1/sites/default/settings.php
     
 	# Setting up Nginx mapping
-    cat > "/etc/nginx/sites-enabled/drupal6/$1.conf" <<END
+    cat > "/etc/nginx/sites-enabled/$1.conf" <<END
 server {
     server_name $1;
     root /var/www/vhosts/drupal6/$1;
@@ -579,7 +574,7 @@ function install_drupal7 {
 
 
     # Setting up Nginx mapping
-    cat > "/etc/nginx/sites-enabled/drupal7/$1.conf" <<END
+    cat > "/etc/nginx/sites-enabled/$1.conf" <<END
 server {
     server_name $1;
     root /var/www/vhosts/drupal7/$1;
@@ -691,7 +686,7 @@ function install_magento {
   passwd=`get_password "$userid@mysql"`
   
   # Setup Nginx Magento config file for domain.
-  cat > "/etc/nginx/sites-enabled/magento/$1.conf" <<END
+  cat > "/etc/nginx/sites-enabled/$1.conf" <<END
       server {
         listen 80;
         server_name $1;
