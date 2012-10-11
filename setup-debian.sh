@@ -843,6 +843,7 @@ drupal7)
 	;;
 magento)
 	install_magento $2
+	;;
 wordpress)
     install_wordpress $2
     ;;
