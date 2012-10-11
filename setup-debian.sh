@@ -696,10 +696,10 @@ function install_magento {
     server {
         listen 80 default;
         
-		## SSL Configuration
-        listen 443 default ssl;
-        ssl_certificate     /etc/nginx/conf.d/$1.crt;
-        ssl_certificate_key /etc/nginx/conf.d/$1.key;
+		## SSL Configuration goes here
+        #listen 443 default ssl;
+        #ssl_certificate     /etc/nginx/conf.d/$1.crt;
+        #ssl_certificate_key /etc/nginx/conf.d/$1.key;
 		
 	    ##Configuration for Fooman Speedster
 	    rewrite ^/minify/([0-9]+)(/.*.(js|css))$ /lib/minify/m.php?f=$2&d=$1 last;
