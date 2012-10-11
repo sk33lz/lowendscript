@@ -750,9 +750,6 @@ function install_magento {
      
             expires        off; ## Do not cache dynamic content
             fastcgi_pass   127.0.0.1:9000;
-            fastcgi_param  HTTPS $fastcgi_https;
-            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-            include        fastcgi_params; ## See /etc/nginx/fastcgi_params
         }
     }
 END
