@@ -776,7 +776,7 @@ END
 }
 
 function install_mysql.12.04 {
-    rm /etc/apt/sources.list.d/
+    rm /etc/apt/sources.list.d/MariaDB.list
     # Install the MySQL packages
     apt-get install mysql-server
 
