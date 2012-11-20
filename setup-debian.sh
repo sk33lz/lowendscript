@@ -303,9 +303,9 @@ function install_wordpress {
     mkdir /tmp/wordpress.$1
     wget -O - http://wordpress.org/latest.tar.gz | \
         tar zxf - -C /tmp/wordpress.$1
-	mkdir /var/www/vhosts/wordpress/$1
-	chown root:root -R "/var/www/vhosts/wordpress/$1"
-    mv /tmp/wordpress.$1/wordpress "/var/www/vhosts/wordpress/$1"
+	mkdir /var/www/$1
+	chown root:root -R "/var/www/$1"
+    mv /tmp/wordpress.$1/wordpress "/var/www/$1"
     rm -rf /tmp/wordpress.$1
     
 
@@ -316,9 +316,9 @@ function install_wordpress {
     # MySQL userid cannot be more than 15 characters long
     userid="${userid:0:15}"
     passwd=`get_password "$userid@mysql"`
-    cp "/var/www/vhosts/wordpress/$1/wp-config-sample.php" "/var/www/vhosts/wordpress/$1/wp-config.php"
+    cp "/var/www/$1/wp-config-sample.php" "/var/www/$1/wp-config.php"
     sed -i "s/database_name_here/$dbname/; s/username_here/$userid/; s/password_here/$passwd/" \
-        "/var/www/vhosts/wordpress/$1/wp-config.php"
+        "/var/www/$1/wp-config.php"
     mysqladmin create "$dbname"
     echo "GRANT ALL PRIVILEGES ON \`$dbname\`.* TO \`$userid\`@localhost IDENTIFIED BY '$passwd';" | \
         mysql
@@ -327,7 +327,7 @@ function install_wordpress {
     cat > "/etc/nginx/sites-enabled/$1.conf" <<END
 server {
     server_name $1;
-    root /var/www/vhosts/wordpress/$1;
+    root /var/www/$1;
     include /etc/nginx/fastcgi_php;
     location / {
         index index.php;
@@ -342,10 +342,10 @@ END
 
 function install_htmlsite {
     # Setup folder
-	mkdir /var/www/vhosts/html/$1
+	mkdir /var/www/$1
 	
 	# Setup default index.html file
-	cat > "/var/www/vhosts/html/$1/index.html" <<END
+	cat > "/var/www/$1/index.html" <<END
 Hello World
 END
     
@@ -381,9 +381,9 @@ function install_drupal6 {
     mkdir /tmp/drupal6.$1
     wget -O - http://ftp.drupal.org/files/projects/drupal-6.26.tar.gz | \
         tar zxf - -C /tmp/drupal6.$1/
-    mkdir /var/www/vhosts/drupal6/$1
-	chown root:root -R "/var/www/vhosts/drupal6/$1"
-    cp -Rf /tmp/drupal6.$1/drupal6*/* "/var/www/vhosts/drupal6/$1"
+    mkdir /var/www/$1
+	chown root:root -R "/var/www/$1"
+    cp -Rf /tmp/drupal6.$1/drupal6*/* "/var/www/$1"
     rm -rf /tmp/drupal6*
     
 
@@ -398,23 +398,23 @@ function install_drupal6 {
 	# MySQL userid cannot be more than 15 characters long
     userid="${userid:0:15}"
     passwd=`get_password "$userid@mysql"`
-    cp "/var/www/vhosts/drupal6/$1/sites/default/default.settings.php" "/var/www/vhosts/drupal6/$1/sites/default/settings.php"
-	chmod 777 /var/www/vhosts/drupal6/$1/sites/default/settings.php
-	mkdir /var/www/vhosts/drupal6/$1/sites/default/files
-	chmod -R 777 /var/www/vhosts/drupal6/$1/sites/default/files
+    cp "/var/www/$1/sites/default/default.settings.php" "/var/www/$1/sites/default/settings.php"
+	chmod 777 /var/www/$1/sites/default/settings.php
+	mkdir /var/www/$1/sites/default/files
+	chmod -R 777 /var/www/$1/sites/default/files
     mysqladmin create "$dbname"
     echo "GRANT ALL PRIVILEGES ON \`$dbname\`.* TO \`$userid\`@localhost IDENTIFIED BY '$passwd';" | \
         mysql
 
 	#Copy DB Name, User, and Pass to settings.php and set to read only.
 	sed -i "91 s/username/$userid/; 91 s/password/$passwd/; 91 s/databasename/$dbname/" "/var/www/$1/sites/default/settings.php"
-	chmod 644 /var/www/vhosts/drupal6/$1/sites/default/settings.php
+	chmod 644 /var/www/$1/sites/default/settings.php
     
 	# Setting up Nginx mapping
     cat > "/etc/nginx/sites-enabled/$1.conf" <<END
 server {
     server_name $1;
-    root /var/www/vhosts/drupal6/$1;
+    root /var/www/$1;
     include /etc/nginx/fastcgi_php;
     # common Drupal configuration options.
 # Make sure to set $socket to a fastcgi socket.
@@ -522,9 +522,9 @@ function install_drupal7 {
     mkdir /tmp/drupal7.$1
     wget -O - http://ftp.drupal.org/files/projects/drupal-7.15.tar.gz | \
         tar zxf - -C /tmp/drupal7.$1/
-    mkdir /var/www/vhosts/drupal7/$1
-	chown root:root -R "/var/www/vhosts/drupal7/$1"
-    cp -Rf /tmp/drupal7.$1/drupal7*/* "/var/www/vhosts/drupal7/$1"
+    mkdir /var/www/$1
+	chown root:root -R "/var/www/$1"
+    cp -Rf /tmp/drupal7.$1/drupal7*/* "/var/www/$1"
     rm -rf /tmp/drupal7*
     
 
@@ -541,10 +541,10 @@ function install_drupal7 {
     passwd=`get_password "$userid@mysql"`
 	
 	# Copy default.settings.php to settings.php and set write permissions.
-    cp "/var/www/vhosts/drupal7/$1/sites/default/default.settings.php" "/var/www/vhosts/drupal7/$1/sites/default/settings.php"
-	chmod 777 /var/www/vhosts/drupal7/$1/sites/default/settings.php
-	mkdir /var/www/vhosts/drupal7/$1/sites/default/files
-	chmod -R 777 /var/www/vhosts/drupal7/$1/sites/default/files
+    cp "/var/www/$1/sites/default/default.settings.php" "/var/www/$1/sites/default/settings.php"
+	chmod 777 /var/www/$1/sites/default/settings.php
+	mkdir /var/www/$1/sites/default/files
+	chmod -R 777 /var/www/$1/sites/default/files
     
 	# Create MySQL database
 	mysqladmin create "$dbname"
@@ -552,13 +552,13 @@ function install_drupal7 {
         mysql
 		
     #Copy DB Name, User, and Pass to settings.php and set to read only.
-    echo "\$databases['default']['default'] = array(" >> /var/www/vhosts/drupal7/$1/sites/default/settings.php
-    echo "'driver' => 'mysql'," >> /var/www/vhosts/drupal7/$1/sites/default/settings.php
-    echo "'database' => '$dbname'," >> /var/www/vhosts/drupal7/$1/sites/default/settings.php
-    echo "'username' => '$userid'," >> /var/www/vhosts/drupal7/$1/sites/default/settings.php
-    echo "'password' => '$passwd'," >> /var/www/vhosts/drupal7/$1/sites/default/settings.php
-    echo "'host' => 'localhost');" >> /var/www/vhosts/drupal7/$1/sites/default/settings.php
-    chmod 644 /var/www/vhosts/drupal7/$1/sites/default/settings.php
+    echo "\$databases['default']['default'] = array(" >> /var/www/$1/sites/default/settings.php
+    echo "'driver' => 'mysql'," >> /var/www/$1/sites/default/settings.php
+    echo "'database' => '$dbname'," >> /var/www/$1/sites/default/settings.php
+    echo "'username' => '$userid'," >> /var/www/$1/sites/default/settings.php
+    echo "'password' => '$passwd'," >> /var/www/$1/sites/default/settings.php
+    echo "'host' => 'localhost');" >> /var/www/$1/sites/default/settings.php
+    chmod 644 /var/www/$1/sites/default/settings.php
 	
 	#Echo DB Name
 	echo -e $COL_BLUE"*** COPY FOR SAFE KEEPING ***"
@@ -581,7 +581,7 @@ function install_drupal7 {
     cat > "/etc/nginx/sites-enabled/$1.conf" <<END
 server {
     server_name $1;
-    root /var/www/vhosts/drupal7/$1;
+    root /var/www/$1;
     include /etc/nginx/fastcgi_php;
     # common Drupal configuration options.
 # Make sure to set $socket to a fastcgi socket.
@@ -673,10 +673,10 @@ function install_magento {
   mkdir /tmp/magento.$1
   wget -O - http://www.magentocommerce.com/downloads/assets/1.7.0.2/magento-1.7.0.2.tar.gz | \
   tar zxf - -C /tmp/magento.$1/
-  mkdir /var/www/vhosts/magento/$1
-  cp -Rf /tmp/magento.$1/magento*/* "/var/www/vhosts/magento/$1"
+  mkdir /var/www/$1
+  cp -Rf /tmp/magento.$1/magento*/* "/var/www/$1"
   rm -rf /tmp/magento*
-  chown root:root -R "/var/www/vhosts/magento/$1"
+  chown root:root -R "/var/www/$1"
 
   # Setting up the MySQL database
   dbname=`echo $1 | tr . _`
@@ -714,7 +714,7 @@ function install_magento {
         }
         
 		##Server Root
-		root /var/www/vhosts/magento/$1;
+		root /var/www/$1;
      
         location / {
             index index.html index.php; ## Allow a static html file to be shown first
