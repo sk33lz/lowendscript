@@ -864,13 +864,13 @@ exim4)
     install_exim4
     ;;
 mariadb)
-	install_mariadb
+	install_mariadb.deb.12.04
 	;;
 mysql)
     install_mysql
     ;;
 nginx)
-    install_nginx
+    install_nginx.deb.12.04
     ;;
 php)
     install_php
