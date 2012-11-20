@@ -141,24 +141,14 @@ END
 }
 
 function install_nginx {
-	apt-get update 
-    apt-get install nginx
-	
+    check_install nginx nginx
+    
     # Need to increase the bucket size for Debian 5.
     cat > /etc/nginx/conf.d/lowendbox.conf <<END
 server_names_hash_bucket_size 64;
 END
 
     invoke-rc.d nginx restart
-	
-	mkdir -p /var/www
-	mkdir -p /var/www/vhosts
-	mkdir -p /var/www/vhosts/drupal7
-	mkdir -p /var/www/vhosts/drupal6
-	mkdir -p /var/www/vhosts/magento
-	mkdir -p /var/www/vhosts/html
-	mkdir -p /var/www/vhosts/wordpress
-	chown -R root:root /var/www
 }
 
 function install_php {
@@ -300,14 +290,12 @@ function install_wordpress {
     fi
 
     # Downloading the WordPress' latest and greatest distribution.
-    mkdir /tmp/wordpress.$1
+    mkdir /tmp/wordpress.$$
     wget -O - http://wordpress.org/latest.tar.gz | \
-        tar zxf - -C /tmp/wordpress.$1
-	mkdir /var/www/$1
-	chown root:root -R "/var/www/$1"
-    mv /tmp/wordpress.$1/wordpress "/var/www/$1"
-    rm -rf /tmp/wordpress.$1
-    
+        tar zxf - -C /tmp/wordpress.$$
+    mv /tmp/wordpress.$$/wordpress "/var/www/$1"
+    rm -rf /tmp/wordpress.$$
+    chown root:root -R "/var/www/$1"
 
     # Setting up the MySQL database
     dbname=`echo $1 | tr . _`
@@ -353,7 +341,7 @@ END
     cat > "/etc/nginx/sites-enabled/$1.conf" <<END
 server {
     server_name $1;
-    root /var/www/vhosts/$1;
+    root /var/www/$1;
     include /etc/nginx/fastcgi_php;
     location / {
         index index.php index.html;
@@ -367,7 +355,7 @@ END
 }
 
 function install_drupal6 {
-    check_install wget wget
+    check_install wget
     if [ -z "$1" ]
     then
         die "Usage: `basename $0` drupal <hostname>"
@@ -378,14 +366,13 @@ function install_drupal6 {
     /etc/init.d/php-cgi restart
 	
     # Downloading the Drupal' latest and greatest distribution.
-    mkdir /tmp/drupal6.$1
+    mkdir /tmp/drupal.$$
     wget -O - http://ftp.drupal.org/files/projects/drupal-6.26.tar.gz | \
-        tar zxf - -C /tmp/drupal6.$1/
+        tar zxf - -C /tmp/drupal.$$/
     mkdir /var/www/$1
-	chown root:root -R "/var/www/$1"
-    cp -Rf /tmp/drupal6.$1/drupal6*/* "/var/www/$1"
-    rm -rf /tmp/drupal6*
-    
+    cp -Rf /tmp/drupal.$$/drupal*/* "/var/www/$1"
+    rm -rf /tmp/drupal*
+    chown root:root -R "/var/www/$1"
 
     # Setting up the MySQL database
     dbname=`echo $1 | tr . _`
@@ -508,7 +495,7 @@ END
 }
 
 function install_drupal7 {
-    check_install wget wget
+    check_install wget
     if [ -z "$1" ]
     then
         die "Usage: `basename $0` drupal <hostname>"
@@ -519,13 +506,13 @@ function install_drupal7 {
     /etc/init.d/php-cgi restart
 	
     # Downloading the Drupal' latest and greatest distribution.
-    mkdir /tmp/$1
+    mkdir /tmp/drupal.$$
     wget -O - http://ftp.drupal.org/files/projects/drupal-7.15.tar.gz | \
-        tar zxf - -C /tmp/$1/
+        tar zxf - -C /tmp/drupal.$$/
     mkdir /var/www/$1
-	chown root:root -R "/var/www/$1"
-    cp -Rf /tmp/$1/* "/var/www/$1"
-    
+    cp -Rf /tmp/drupal.$$/drupal*/* "/var/www/$1"
+    rm -rf /tmp/drupal*
+    chown root:root -R "/var/www/$1"
 
     # Setting up the MySQL database
     dbname=`echo $1 | tr . _`
@@ -540,7 +527,7 @@ function install_drupal7 {
     passwd=`get_password "$userid@mysql"`
 	
 	# Copy default.settings.php to settings.php and set write permissions.
-	cp "/var/www/$1/sites/default/default.settings.php" "/var/www/$1/sites/default/settings.php"
+    cp "/var/www/$1/sites/default/default.settings.php" "/var/www/$1/sites/default/settings.php"
 	chmod 777 /var/www/$1/sites/default/settings.php
 	mkdir /var/www/$1/sites/default/files
 	chmod -R 777 /var/www/$1/sites/default/files
@@ -657,188 +644,6 @@ END
     invoke-rc.d nginx reload
 }
 
-function install_magento {
-  ##Check for Wget
-  check_install wget wget
-    if [ -z "$1" ]
-    then
-        die "Usage: `basename $0` magento <hostname>"
-    fi
-  #Download PHP5-gd package
-  apt-get -q -y install php5-gd
-  /etc/init.d/php-cgi restart
-	
-  # Downloading the Magento's latest and greatest distribution.
-  mkdir /tmp/magento.$1
-  wget -O - http://www.magentocommerce.com/downloads/assets/1.7.0.2/magento-1.7.0.2.tar.gz | \
-  tar zxf - -C /tmp/magento.$1/
-  mkdir /var/www/$1
-  cp -Rf /tmp/magento.$1/magento*/* "/var/www/$1"
-  rm -rf /tmp/magento*
-  chown root:root -R "/var/www/$1"
-
-  # Setting up the MySQL database
-  dbname=`echo $1 | tr . _`
-	
-  # MySQL dbname cannot be more than 15 characters long
-  dbname="${dbname:0:15}"
-  userid=`get_domain_name $1`
-	
-  # MySQL userid cannot be more than 15 characters long
-  userid="${userid:0:15}"
-  passwd=`get_password "$userid@mysql"`
-  
-  # Setup Nginx Magento config file for domain.
-  cat > "/etc/nginx/sites-enabled/$1.conf" <<END
-      server {
-        listen 80;
-        server_name $1;
-        rewrite / $scheme://$1$request_uri permanent; ## Forcibly remove www
-    }
-     
-    server {
-        listen 80 default;
-        
-		## SSL Configuration goes here
-        #listen 443 default ssl;
-        #ssl_certificate     /etc/nginx/conf.d/$1.crt;
-        #ssl_certificate_key /etc/nginx/conf.d/$1.key;
-		
-	    ##Configuration for Fooman Speedster
-	    rewrite ^/minify/([0-9]+)(/.*.(js|css))$ /lib/minify/m.php?f=$2&d=$1 last;
-        rewrite ^/skin/m/([0-9]+)(/.*.(js|css))$ /lib/minify/m.php?f=$2&d=$1 last;
-
-        location /lib/minify/ {
-          allow all;
-        }
-        
-		##Server Root
-		root /var/www/$1;
-     
-        location / {
-            index index.html index.php; ## Allow a static html file to be shown first
-            try_files $uri $uri/ @handler; ## If missing pass the URI to Magento's front handler
-            expires 30d; ## Assume all files are cachable
-        }
-     
-        ## These locations would be hidden by .htaccess normally
-        location ^~ /app/                { deny all; }
-        location ^~ /includes/           { deny all; }
-        location ^~ /lib/                { deny all; }
-        location ^~ /media/downloadable/ { deny all; }
-        location ^~ /pkginfo/            { deny all; }
-        location ^~ /report/config.xml   { deny all; }
-        location ^~ /var/                { deny all; }
-     
-        location /var/export/ { ## Allow admins only to view export folder
-            auth_basic           "Restricted"; ## Message shown in login window
-            auth_basic_user_file htpasswd; ## See /etc/nginx/htpassword
-            autoindex            on;
-        }
-     
-        location  /. { ## Disable .htaccess and other hidden files
-            return 404;
-        }
-     
-        location @handler { ## Magento uses a common front handler
-            rewrite / /index.php;
-        }
-     
-        location ~ .php/ { ## Forward paths like /js/index.php/x.js to relevant handler
-            rewrite ^(.*.php)/ $1 last;
-        }
-     
-        location ~ .php$ { ## Execute PHP scripts
-            #if (!-e $request_filename) { rewrite / /index.php last; } ## Catch 404s that try_files miss
-     
-            expires        off; ## Do not cache dynamic content
-            fastcgi_pass   127.0.0.1:9000;
-        }
-    }
-END
-  invoke-rc.d nginx reload
-  
-  #Echo DB Name
-	echo -e $COL_BLUE"*** COPY FOR SAFE KEEPING ***"
-	COL_BLUE="\x1b[34;01m"
-    COL_RESET="\x1b[39;49;00m"
-    echo -e $COL_BLUE"Database Name: "$COL_RESET"$dbname"
-	
-    #Echo DB User value
-	echo -e $COL_BLUE"Database User: "$COL_RESET"${userid:0:15}"
-	
-	#Echo DB Password
-	echo -e $COL_BLUE"Database Password: "$COL_RESET"$passwd"
-	
-	#Echo Install URL
-	echo -e $COL_BLUE"Visit to finalize installation: "$COL_RESET"http://$1/install.php"
-}
-
-function install_mysql.12.04 {
-    rm /etc/apt/sources.list.d/MariaDB.list
-    # Install the MySQL packages
-    apt-get install mysql-server
-
-    # Install a low-end copy of the my.cnf to disable InnoDB, and then delete
-    # all the related files.
-    service mysql stop
-    rm -f /var/lib/mysql/ib*
-    cat > /etc/mysql/conf.d/lowendbox.cnf <<END
-[mysqld]
-key_buffer = 8M
-query_cache_size = 0
-ignore_builtin_innodb
-default_storage_engine=MyISAM
-END
-    service mysql start
-}
-
-function install_mariadb.deb.12.04 {
-  sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 1BB943DB
-  cat > "/etc/apt/sources.list.d/MariaDB.list" <<END
-  # MariaDB 5.5 repository list - created 2012-10-11 21:37 UTC
-  # http://downloads.mariadb.org/mariadb/repositories/
-  deb http://ftp.osuosl.org/pub/mariadb/repo/5.5/ubuntu precise main
-  deb-src http://ftp.osuosl.org/pub/mariadb/repo/5.5/ubuntu precise main
-END
-  sudo apt-get update
-  sudo apt-get install mariadb-server-5.5
-  
-  # Install a low-end copy of the my.cnf to disable InnoDB, and then delete
-  # all the related files.
-  service mysql stop
-  rm -f /var/lib/mysql/ib*
-  cat > /etc/mysql/conf.d/lowendbox.cnf <<END
-[mysqld]
-key_buffer = 8M
-query_cache_size = 0
-ignore_builtin_innodb
-default_storage_engine=MyISAM
-END
-  service mysql start
-}
-
-function install_nginx.deb.12.04 {
-  wget http://nginx.org/keys/nginx_signing.key
-  cat > "/etc/apt/sources.list.d/Nginx.list" <<END
-  # Nginx 2.x repository list
-  deb http://nginx.org/packages/ubuntu/ precise nginx
-  deb-src http://nginx.org/packages/ubuntu/ precise nginx
-END
-  sudo apt-get update
-  sudo apt-get install nginx
-  service nginx start
-}
-
-function install_csf {
-  mkdir /tmp/configserver
-    wget -O - http://www.configserver.com/free/csf.tgz | \
-        tar zxf - -C /tmp/configserver
-	cd /tmp/configserver
-	sh install.sh
-	rm -rf /tmp/configserver*
-}
-
 function print_info {
     echo -n -e '\e[1;36m'
     echo -n $1
@@ -889,26 +694,14 @@ export PATH=/bin:/usr/bin:/sbin:/usr/sbin
 
 check_sanity
 case "$1" in
-csf)
-	install_csf
-	;;
 exim4)
     install_exim4
     ;;
-mariadb.12.04)
-	install_mariadb.deb.12.04
-	;;
 mysql)
     install_mysql
     ;;
-mysql.12.04)
-    install_mysql.12.04
-    ;;
 nginx)
     install_nginx
-    ;;
-nginx.12.04)
-    install_nginx.deb.12.04
     ;;
 php)
     install_php
@@ -929,16 +722,13 @@ drupal6)
 drupal7)
     install_drupal7 $2
 	;;
-magento)
-	install_magento $2
-	;;
 wordpress)
     install_wordpress $2
     ;;
 *)
     echo 'Usage:' `basename $0` '[option]'
     echo 'Available option:'
-    for option in system csf exim4 mariadb.12.04 mysql mysql.12.04 nginx nginx.12.04 php wordpress drupal6 drupal7 magento htmlsite
+    for option in system exim4 mysql nginx php wordpress drupal6 drupal7 htmlsite
     do
         echo '  -' $option
     done
