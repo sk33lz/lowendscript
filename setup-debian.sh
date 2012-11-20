@@ -776,7 +776,7 @@ END
 }
 
 function install_mariadb.deb.12.04 {
-  sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xcbcb082a1bb943db
+  sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 1BB943DB
   cat > "/etc/apt/sources.list.d/MariaDB.list" <<END
   # MariaDB 5.5 repository list - created 2012-10-11 21:37 UTC
   # http://downloads.mariadb.org/mariadb/repositories/
@@ -791,7 +791,6 @@ function install_nginx.deb.12.04 {
   wget http://nginx.org/keys/nginx_signing.key
   cat > "/etc/apt/sources.list.d/Nginx.list" <<END
   # Nginx 2.x repository list
-  # http://downloads.mariadb.org/mariadb/repositories/
   deb http://nginx.org/packages/ubuntu/ precise nginx
   deb-src http://nginx.org/packages/ubuntu/ precise nginx
 END
