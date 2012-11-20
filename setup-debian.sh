@@ -303,9 +303,11 @@ function install_wordpress {
     mkdir /tmp/wordpress.$$
     wget -O - http://wordpress.org/latest.tar.gz | \
         tar zxf - -C /tmp/wordpress.$$
+	mkdir /var/www/vhosts/wordpress/$1
+	chown root:root -R "/var/www/vhosts/wordpress/$1"
     mv /tmp/wordpress.$$/wordpress "/var/www/vhosts/wordpress/$1"
     rm -rf /tmp/wordpress.$$
-    chown root:root -R "/var/www/vhosts/wordpress/$1"
+    
 
     # Setting up the MySQL database
     dbname=`echo $1 | tr . _`
@@ -380,9 +382,10 @@ function install_drupal6 {
     wget -O - http://ftp.drupal.org/files/projects/drupal-6.26.tar.gz | \
         tar zxf - -C /tmp/drupal6.$$/
     mkdir /var/www/vhosts/drupal6/$1
+	chown root:root -R "/var/www/vhosts/drupal6/$1"
     cp -Rf /tmp/drupal6.$$/drupal6*/* "/var/www/vhosts/drupal6/$1"
     rm -rf /tmp/drupal6*
-    chown root:root -R "/var/www/vhosts/drupal6/$1"
+    
 
     # Setting up the MySQL database
     dbname=`echo $1 | tr . _`
@@ -516,13 +519,14 @@ function install_drupal7 {
     /etc/init.d/php-cgi restart
 	
     # Downloading the Drupal' latest and greatest distribution.
-    mkdir /tmp/drupal7.$$
+    mkdir /tmp/drupal7.$1
     wget -O - http://ftp.drupal.org/files/projects/drupal-7.15.tar.gz | \
-        tar zxf - -C /tmp/drupal7.$$/
+        tar zxf - -C /tmp/drupal7.$1/
     mkdir /var/www/vhosts/drupal7/$1
-    cp -Rf /tmp/drupal7.$$/drupal7*/* "/var/www/vhosts/drupal7/$1"
+	chown root:root -R "/var/www/vhosts/drupal7/$1"
+    cp -Rf /tmp/drupal7.$1/drupal7*/* "/var/www/vhosts/drupal7/$1"
     rm -rf /tmp/drupal7*
-    chown root:root -R "/var/www/vhosts/drupal7/$1"
+    
 
     # Setting up the MySQL database
     dbname=`echo $1 | tr . _`
