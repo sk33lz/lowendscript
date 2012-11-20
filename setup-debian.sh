@@ -901,7 +901,7 @@ mysql)
     install_mysql
     ;;
 mysql.12.04)
-    install_mysql
+    install_mysql.12.04
     ;;
 nginx)
     install_nginx
