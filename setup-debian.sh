@@ -541,7 +541,8 @@ function install_drupal7 {
     passwd=`get_password "$userid@mysql"`
 	
 	# Copy default.settings.php to settings.php and set write permissions.
-    cp "/var/www/$1/sites/default/default.settings.php" "/var/www/$1/sites/default/settings.php"
+    mkdir /var/www/$1/sites/default
+	cp "/var/www/$1/sites/default/default.settings.php" "/var/www/$1/sites/default/settings.php"
 	chmod 777 /var/www/$1/sites/default/settings.php
 	mkdir /var/www/$1/sites/default/files
 	chmod -R 777 /var/www/$1/sites/default/files
