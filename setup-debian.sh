@@ -782,7 +782,7 @@ function install_mysql.12.04 {
 
     # Install a low-end copy of the my.cnf to disable InnoDB, and then delete
     # all the related files.
-    invoke-rc.d mysql stop
+    service mysql stop
     rm -f /var/lib/mysql/ib*
     cat > /etc/mysql/conf.d/lowendbox.cnf <<END
 [mysqld]
@@ -791,7 +791,7 @@ query_cache_size = 0
 ignore_builtin_innodb
 default_storage_engine=MyISAM
 END
-    invoke-rc.d mysql start
+    service mysql start
 }
 
 function install_mariadb.deb.12.04 {
@@ -807,7 +807,7 @@ END
   
   # Install a low-end copy of the my.cnf to disable InnoDB, and then delete
   # all the related files.
-  invoke-rc.d mysql stop
+  service mysql stop
   rm -f /var/lib/mysql/ib*
   cat > /etc/mysql/conf.d/lowendbox.cnf <<END
 [mysqld]
@@ -816,7 +816,7 @@ query_cache_size = 0
 ignore_builtin_innodb
 default_storage_engine=MyISAM
 END
-  invoke-rc.d mysql start
+  service mysql start
 }
 
 function install_nginx.deb.12.04 {
@@ -828,6 +828,7 @@ function install_nginx.deb.12.04 {
 END
   sudo apt-get update
   sudo apt-get install nginx
+  service nginx start
 }
 
 function install_csf {
