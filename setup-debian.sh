@@ -525,7 +525,6 @@ function install_drupal7 {
     mkdir /var/www/$1
 	chown root:root -R "/var/www/$1"
     cp -Rf /tmp/$1/* "/var/www/$1"
-    rm -rf /tmp/drupal7*
     
 
     # Setting up the MySQL database
@@ -541,7 +540,6 @@ function install_drupal7 {
     passwd=`get_password "$userid@mysql"`
 	
 	# Copy default.settings.php to settings.php and set write permissions.
-    mkdir /var/www/$1/sites/default
 	cp "/var/www/$1/sites/default/default.settings.php" "/var/www/$1/sites/default/settings.php"
 	chmod 777 /var/www/$1/sites/default/settings.php
 	mkdir /var/www/$1/sites/default/files
