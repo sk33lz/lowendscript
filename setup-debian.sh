@@ -863,13 +863,13 @@ csf)
 exim4)
     install_exim4
     ;;
-mariadb.deb.12.04)
+mariadb.12.04)
 	install_mariadb.deb.12.04
 	;;
 mysql)
     install_mysql
     ;;
-nginx.deb.12.04)
+nginx.12.04)
     install_nginx.deb.12.04
     ;;
 php)
@@ -900,7 +900,7 @@ wordpress)
 *)
     echo 'Usage:' `basename $0` '[option]'
     echo 'Available option:'
-    for option in system csf exim4 mariadb mysql nginx php wordpress drupal6 drupal7 magento htmlsite
+    for option in system csf exim4 mariadb.12.04 mysql nginx.12.04 php wordpress drupal6 drupal7 magento htmlsite
     do
         echo '  -' $option
     done
