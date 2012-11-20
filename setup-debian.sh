@@ -797,16 +797,6 @@ query_cache_size = 0
 skip-innodb
 END
   invoke-rc.d mysql start
-
-  # Generating a new password for the root user.
-  passwd=`get_password root@mysql`
-  mysqladmin password "$passwd"
-  cat > ~/.my.cnf <<END
-[client]
-user = root
-password = $passwd
-END
-  chmod 600 ~/.my.cnf
 }
 
 function install_nginx.deb.12.04 {
