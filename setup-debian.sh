@@ -863,13 +863,13 @@ csf)
 exim4)
     install_exim4
     ;;
-mariadb)
+mariadb.deb.12.04)
 	install_mariadb.deb.12.04
 	;;
 mysql)
     install_mysql
     ;;
-nginx)
+nginx.deb.12.04)
     install_nginx.deb.12.04
     ;;
 php)
