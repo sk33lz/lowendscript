@@ -300,13 +300,13 @@ function install_wordpress {
     fi
 
     # Downloading the WordPress' latest and greatest distribution.
-    mkdir /tmp/wordpress.$$
+    mkdir /tmp/wordpress.$1
     wget -O - http://wordpress.org/latest.tar.gz | \
-        tar zxf - -C /tmp/wordpress.$$
+        tar zxf - -C /tmp/wordpress.$1
 	mkdir /var/www/vhosts/wordpress/$1
 	chown root:root -R "/var/www/vhosts/wordpress/$1"
-    mv /tmp/wordpress.$$/wordpress "/var/www/vhosts/wordpress/$1"
-    rm -rf /tmp/wordpress.$$
+    mv /tmp/wordpress.$1/wordpress "/var/www/vhosts/wordpress/$1"
+    rm -rf /tmp/wordpress.$1
     
 
     # Setting up the MySQL database
@@ -378,12 +378,12 @@ function install_drupal6 {
     /etc/init.d/php-cgi restart
 	
     # Downloading the Drupal' latest and greatest distribution.
-    mkdir /tmp/drupal6.$$
+    mkdir /tmp/drupal6.$1
     wget -O - http://ftp.drupal.org/files/projects/drupal-6.26.tar.gz | \
-        tar zxf - -C /tmp/drupal6.$$/
+        tar zxf - -C /tmp/drupal6.$1/
     mkdir /var/www/vhosts/drupal6/$1
 	chown root:root -R "/var/www/vhosts/drupal6/$1"
-    cp -Rf /tmp/drupal6.$$/drupal6*/* "/var/www/vhosts/drupal6/$1"
+    cp -Rf /tmp/drupal6.$1/drupal6*/* "/var/www/vhosts/drupal6/$1"
     rm -rf /tmp/drupal6*
     
 
@@ -670,11 +670,11 @@ function install_magento {
   /etc/init.d/php-cgi restart
 	
   # Downloading the Magento's latest and greatest distribution.
-  mkdir /tmp/magento.$$
+  mkdir /tmp/magento.$1
   wget -O - http://www.magentocommerce.com/downloads/assets/1.7.0.2/magento-1.7.0.2.tar.gz | \
-  tar zxf - -C /tmp/magento.$$/
+  tar zxf - -C /tmp/magento.$1/
   mkdir /var/www/vhosts/magento/$1
-  cp -Rf /tmp/magento.$$/magento*/* "/var/www/vhosts/magento/$1"
+  cp -Rf /tmp/magento.$1/magento*/* "/var/www/vhosts/magento/$1"
   rm -rf /tmp/magento*
   chown root:root -R "/var/www/vhosts/magento/$1"
 
@@ -775,7 +775,7 @@ END
 	echo -e $COL_BLUE"Visit to finalize installation: "$COL_RESET"http://$1/install.php"
 }
 
-function install_mariadb {
+function install_mariadb.deb.12.04 {
   sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xcbcb082a1bb943db
   cat > "/etc/apt/sources.list.d/MariaDB.list" <<END
   # MariaDB 5.5 repository list - created 2012-10-11 21:37 UTC
@@ -787,11 +787,23 @@ END
   sudo apt-get install mariadb-server-5.5
 }
 
+function install_nginx.deb.12.04 {
+  wget http://nginx.org/keys/nginx_signing.key
+  cat > "/etc/apt/sources.list.d/Nginx.list" <<END
+  # Nginx 2.x repository list
+  # http://downloads.mariadb.org/mariadb/repositories/
+  deb http://nginx.org/packages/ubuntu/ precise nginx
+  deb-src http://nginx.org/packages/ubuntu/ precise nginx
+END
+  sudo apt-get update
+  sudo apt-get install nginx
+}
+
 function install_csf {
-  mkdir /tmp/configserver.$$
+  mkdir /tmp/configserver
     wget -O - http://www.configserver.com/free/csf.tgz | \
-        tar zxf - -C /tmp/configserver.$$
-	cd /tmp/configserver.$$
+        tar zxf - -C /tmp/configserver
+	cd /tmp/configserver
 	sh install.sh
 	rm -rf /tmp/configserver*
 }
