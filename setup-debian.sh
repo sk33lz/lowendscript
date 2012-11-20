@@ -794,7 +794,8 @@ END
 [mysqld]
 key_buffer = 8M
 query_cache_size = 0
-skip-innodb
+ignore_builtin_innodb
+default_storage_engine=MyISAM
 END
   invoke-rc.d mysql start
 }
