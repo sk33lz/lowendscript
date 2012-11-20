@@ -519,12 +519,12 @@ function install_drupal7 {
     /etc/init.d/php-cgi restart
 	
     # Downloading the Drupal' latest and greatest distribution.
-    mkdir /tmp/drupal7.$1
+    mkdir /tmp/$1
     wget -O - http://ftp.drupal.org/files/projects/drupal-7.15.tar.gz | \
-        tar zxf - -C /tmp/drupal7.$1/
+        tar zxf - -C /tmp/$1/
     mkdir /var/www/$1
 	chown root:root -R "/var/www/$1"
-    cp -Rf /tmp/drupal7.$1/drupal7*/* "/var/www/$1"
+    cp -Rf /tmp/$1/* "/var/www/$1"
     rm -rf /tmp/drupal7*
     
 
