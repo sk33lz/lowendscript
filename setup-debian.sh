@@ -792,6 +792,7 @@ ignore_builtin_innodb
 default_storage_engine=MyISAM
 END
     invoke-rc.d mysql start
+}
 
 function install_mariadb.deb.12.04 {
   sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 1BB943DB
