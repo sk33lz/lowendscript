@@ -775,6 +775,24 @@ END
 	echo -e $COL_BLUE"Visit to finalize installation: "$COL_RESET"http://$1/install.php"
 }
 
+function install_mysql.12.04 {
+    rm /etc/apt/sources.list.d/
+    # Install the MySQL packages
+    apt-get install mysql-server
+
+    # Install a low-end copy of the my.cnf to disable InnoDB, and then delete
+    # all the related files.
+    invoke-rc.d mysql stop
+    rm -f /var/lib/mysql/ib*
+    cat > /etc/mysql/conf.d/lowendbox.cnf <<END
+[mysqld]
+key_buffer = 8M
+query_cache_size = 0
+ignore_builtin_innodb
+default_storage_engine=MyISAM
+END
+    invoke-rc.d mysql start
+
 function install_mariadb.deb.12.04 {
   sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 1BB943DB
   cat > "/etc/apt/sources.list.d/MariaDB.list" <<END
@@ -882,6 +900,12 @@ mariadb.12.04)
 mysql)
     install_mysql
     ;;
+mysql.12.04)
+    install_mysql
+    ;;
+nginx)
+    install_nginx
+    ;;
 nginx.12.04)
     install_nginx.deb.12.04
     ;;
@@ -913,7 +937,7 @@ wordpress)
 *)
     echo 'Usage:' `basename $0` '[option]'
     echo 'Available option:'
-    for option in system csf exim4 mariadb.12.04 mysql nginx.12.04 php wordpress drupal6 drupal7 magento htmlsite
+    for option in system csf exim4 mariadb.12.04 mysql mysql.12.04 nginx nginx.12.04 php wordpress drupal6 drupal7 magento htmlsite
     do
         echo '  -' $option
     done
