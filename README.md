@@ -1,10 +1,10 @@
 A simple bash shell script to optimize your Debian or Ubuntu VPS server for serving PHP and MySQL driven website platforms like Drupal and Wordpress.
 
-#TESTED ON
+### TESTED ON
 * Ubuntu 10.04 LTS, Ubuntu 12.04 LTS, Ubuntu 13.04
 * Debian 5, Debian 6
 
-#INSTALLATION
+### INSTALLATION
 Download setup-debian.sh using one of the following commands:
 
 git clone git://github.com/sk33lz/lowendscript.git
@@ -13,7 +13,7 @@ or
 
 wget --no-check-certificate https://github.com/dhamaniasad/lowendscript/raw/master/setup-debian.sh
 
-#USAGE
+### USAGE
 This script should be run by the root user for maximum compatibility.
 
 * Install System Tools 
@@ -87,7 +87,7 @@ This script should be run by the root user for maximum compatibility.
   
   bash setup-debian.sh magento example.com
 
-#SOFTWARE STACK
+### SOFTWARE STACK
 * Dropbear 
   - Replaces openssh. Invoked from xinetd.
 * Inetutils-syslogd 
