@@ -731,6 +731,7 @@ system)
 	install_htop
 	install_smart
 	install_locate
+	fix_locale
     ;;
 htmlsite)
     install_htmlsite $2
@@ -746,9 +747,6 @@ wordpress)
     ;;
 magento)
     install_magento $2
-	;;
-locale)
-	fix_locale $2
 	;;
 *)
     echo 'Usage:' `basename $0` '[option]'
