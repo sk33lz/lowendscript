@@ -7,29 +7,29 @@ A simple bash shell script to optimize your Debian or Ubuntu VPS server for serv
 ### INSTALLATION
 Download setup-debian.sh using one of the following commands:
 
-    git clone git://github.com/dhamaniasad/lowendscript.git
-
+    wget --no-check-certificate https://github.com/dhamaniasad/lowendscript/raw/master/setup-debian.sh
+	
 or
 
-    wget --no-check-certificate https://github.com/dhamaniasad/lowendscript/raw/master/setup-debian.sh
+    git clone git://github.com/dhamaniasad/lowendscript.git
 
 ### USAGE
 This script should be run by the root user for maximum compatibility.
 
 #### Install System Tools 
-  - Installs Dropbear, cron, and inetutils-syslog (replaces rsyslog), htop, smartmontools
+Installs Dropbear, cron, and inetutils-syslog (replaces rsyslog), htop, smartmontools
 
-  Command:    
+Command:    
   
     bash setup-debian.sh system
   
-* Install ConfigServer Firewall
-  - Installs Config Server Firewall for server security and intrusion detection.
-  - Edit the /etc/csf/csf.cfg file to add your email address, or enable specific ports.
+#### Install ConfigServer Firewall
+Installs Config Server Firewall for server security and intrusion detection.
+Edit the /etc/csf/csf.cfg file to add your email address, or enable specific ports.
 
-  Command:
+Command:
   
-  bash setup-debian.sh csf
+    bash setup-debian.sh csf
   
 * Install Exim4 Mail Server 
   - Lightweight replacement for sendmail. Re-configured to allow Internet delivery.
