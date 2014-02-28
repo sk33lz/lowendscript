@@ -1,7 +1,7 @@
 A simple bash shell script to optimize your Debian or Ubuntu VPS server for serving PHP and MySQL driven website platforms like Drupal and Wordpress.
 
 #TESTED ON
-* Ubuntu 10.04 LTS, Ubuntu 12.04 LTS
+* Ubuntu 10.04 LTS, Ubuntu 12.04 LTS, Ubuntu 13.04
 * Debian 5, Debian 6
 
 #INSTALLATION
