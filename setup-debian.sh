@@ -87,6 +87,10 @@ function install_locate {
     check_install locate locate
 }
 
+function fix_locale {
+    dpkg-reconfigure locales
+}
+
 function install_dropbear {
     check_install dropbear dropbear
     check_install /usr/sbin/xinetd xinetd
@@ -742,6 +746,9 @@ wordpress)
     ;;
 magento)
     install_magento $2
+	;;
+locale)
+	fix_locale $2
 	;;
 *)
     echo 'Usage:' `basename $0` '[option]'
