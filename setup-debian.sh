@@ -76,7 +76,7 @@ function install_dash {
 }
 
 function install_htop {
-    check_install htop
+    check_install htop htop
 }
 
 function install_dropbear {
