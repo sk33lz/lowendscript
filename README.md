@@ -5,13 +5,13 @@ A simple bash shell script to optimize your Debian or Ubuntu VPS server for serv
 * Debian 5, Debian 6
 
 ### INSTALLATION
-    # Download setup-debian.sh using one of the following commands:
+Download setup-debian.sh using one of the following commands:
 
-git clone git://github.com/sk33lz/lowendscript.git
+    #git clone git://github.com/dhamaniasad/lowendscript.git
 
-or
+    or
 
-wget --no-check-certificate https://github.com/dhamaniasad/lowendscript/raw/master/setup-debian.sh
+    wget --no-check-certificate https://github.com/dhamaniasad/lowendscript/raw/master/setup-debian.sh
 
 ### USAGE
 This script should be run by the root user for maximum compatibility.
