@@ -79,6 +79,10 @@ function install_htop {
     check_install htop htop
 }
 
+function install_smart {
+	check_install smartmontools smartmontools
+}
+
 function install_dropbear {
     check_install dropbear dropbear
     check_install /usr/sbin/xinetd xinetd
@@ -717,6 +721,7 @@ system)
     install_syslogd
     install_dropbear
 	install_htop
+	install_smart
     ;;
 htmlsite)
     install_htmlsite $2
