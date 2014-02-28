@@ -9,7 +9,7 @@ Download setup-debian.sh using one of the following commands:
 
     git clone git://github.com/dhamaniasad/lowendscript.git
 
-    or
+or
 
     wget --no-check-certificate https://github.com/dhamaniasad/lowendscript/raw/master/setup-debian.sh
 
@@ -21,7 +21,7 @@ This script should be run by the root user for maximum compatibility.
 
   Command:    
   
-    # bash setup-debian.sh system
+    bash setup-debian.sh system
   
 * Install ConfigServer Firewall
   - Installs Config Server Firewall for server security and intrusion detection.
