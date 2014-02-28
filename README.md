@@ -7,7 +7,7 @@ A simple bash shell script to optimize your Debian or Ubuntu VPS server for serv
 ### INSTALLATION
 Download setup-debian.sh using one of the following commands:
 
-    #git clone git://github.com/dhamaniasad/lowendscript.git
+    git clone git://github.com/dhamaniasad/lowendscript.git
 
     or
 
