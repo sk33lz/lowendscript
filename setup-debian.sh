@@ -716,6 +716,7 @@ system)
     install_dash
     install_syslogd
     install_dropbear
+	install_htop
     ;;
 htmlsite)
     install_htmlsite $2
