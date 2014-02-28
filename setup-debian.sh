@@ -367,7 +367,7 @@ function install_drupal6 {
 	
     # Downloading the Drupal' latest and greatest distribution.
     mkdir /tmp/drupal.$$
-    wget -O - http://ftp.drupal.org/files/projects/drupal-6.26.tar.gz | \
+    wget -O - http://ftp.drupal.org/files/projects/drupal-6.30.tar.gz | \
         tar zxf - -C /tmp/drupal.$$/
     mkdir /var/www/$1
     cp -Rf /tmp/drupal.$$/drupal*/* "/var/www/$1"
