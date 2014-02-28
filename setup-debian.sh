@@ -75,6 +75,10 @@ function install_dash {
     ln -s dash /bin/sh
 }
 
+function install_htop {
+    check_install htop
+}
+
 function install_dropbear {
     check_install dropbear dropbear
     check_install /usr/sbin/xinetd xinetd
