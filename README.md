@@ -21,7 +21,7 @@ This script should be run by the root user for maximum compatibility.
 
   Command:    
   
-    bash setup-debian.sh system
+    # bash setup-debian.sh system
   
 * Install ConfigServer Firewall
   - Installs Config Server Firewall for server security and intrusion detection.
