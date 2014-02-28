@@ -16,12 +16,12 @@ Download setup-debian.sh using one of the following commands:
 ### USAGE
 This script should be run by the root user for maximum compatibility.
 
-* Install System Tools 
+#### Install System Tools 
   - Installs Dropbear, cron, and inetutils-syslog (replaces rsyslog), htop, smartmontools
 
   Command:    
   
-  bash setup-debian.sh system
+    bash setup-debian.sh system
   
 * Install ConfigServer Firewall
   - Installs Config Server Firewall for server security and intrusion detection.
