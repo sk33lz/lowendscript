@@ -723,6 +723,11 @@ function print_mysql {
 	cat ~/.my.cnf
 }
 
+function update_locate {
+	# print mysql root password after install
+	updatedb
+}
+
 ########################################################################
 # START OF PROGRAM
 ########################################################################
@@ -753,6 +758,7 @@ system)
 	install_smart
 	install_locate
 	fix_locale
+	update_locate
     ;;
 htmlsite)
     install_htmlsite $2
