@@ -129,31 +129,46 @@ function install_exim4 {
 }
 
 function install_mysql {
-    # Install the MySQL packages
-    check_install mysqld mysql-server
-    check_install mysql mysql-client
 
-    # Install a low-end copy of the my.cnf to disable InnoDB, and then delete
-    # all the related files.
-    invoke-rc.d mysql stop
-    rm -f /var/lib/mysql/ib*
-    cat > /etc/mysql/conf.d/lowendbox.cnf <<END
+	# Install the MySQL packages
+	check_install mysqld mysql-server
+	check_install mysql mysql-client
+
+	# Install a low-end copy of the my.cnf to disable InnoDB
+	invoke-rc.d mysql stop
+	cat > /etc/mysql/conf.d/lowendbox.cnf <<END
+# These values override values from /etc/mysql/my.cnf
+
 [mysqld]
-key_buffer = 8M
+key_buffer = 12M
 query_cache_size = 0
-skip-innodb
-END
-    invoke-rc.d mysql start
+table_cache = 32
 
-    # Generating a new password for the root user.
-    passwd=`get_password root@mysql`
-    mysqladmin password "$passwd"
-    cat > ~/.my.cnf <<END
+init_connect='SET collation_connection = utf8_unicode_ci'
+init_connect='SET NAMES utf8' 
+character-set-server = utf8 
+collation-server = utf8_unicode_ci 
+skip-character-set-client-handshake
+
+default_storage_engine=MyISAM
+skip-innodb
+
+log-slow-queries=/var/log/mysql/slow-queries.log
+
+[client]
+default-character-set = utf8
+END
+	invoke-rc.d mysql start
+
+	# Generating a new password for the root user.
+	passwd=`get_password root@mysql`
+	mysqladmin password "$passwd"
+	cat > ~/.my.cnf <<END
 [client]
 user = root
 password = $passwd
 END
-    chmod 600 ~/.my.cnf
+	chmod 600 ~/.my.cnf
 }
 
 function install_nginx {
