@@ -83,6 +83,14 @@ function install_smart {
 	check_install smartmontools smartmontools
 }
 
+function install_locate {
+    check_install locate locate
+}
+
+function fix_locale {
+    dpkg-reconfigure locales
+}
+
 function install_dropbear {
     check_install dropbear dropbear
     check_install /usr/sbin/xinetd xinetd
@@ -722,6 +730,8 @@ system)
     install_dropbear
 	install_htop
 	install_smart
+	install_locate
+	fix_locale
     ;;
 htmlsite)
     install_htmlsite $2
