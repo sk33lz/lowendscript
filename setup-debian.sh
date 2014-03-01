@@ -718,6 +718,11 @@ function update_upgrade {
     apt-get -q -y upgrade
 }
 
+function print {
+	# print mysql root password after install
+	cat ~/.my.cnf
+}
+
 ########################################################################
 # START OF PROGRAM
 ########################################################################
@@ -762,6 +767,9 @@ wordpress)
     ;;
 magento)
     install_magento $2
+	;;
+print)
+    print $2
 	;;
 *)
     echo 'Usage:' `basename $0` '[option]'
