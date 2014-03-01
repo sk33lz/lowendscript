@@ -91,6 +91,10 @@ function fix_locale {
     dpkg-reconfigure locales
 }
 
+function var_www {
+    mkdir -p /var/www/
+}
+
 function install_dropbear {
     check_install dropbear dropbear
     check_install /usr/sbin/xinetd xinetd
@@ -401,7 +405,7 @@ function install_drupal6 {
     mkdir /tmp/drupal.$$
     wget -O - http://ftp.drupal.org/files/projects/drupal-6.30.tar.gz | \
         tar zxf - -C /tmp/drupal.$$/
-    mkdir /var/www/$1
+    mkdir -p /var/www/$1
     cp -Rf /tmp/drupal.$$/drupal*/* "/var/www/$1"
     rm -rf /tmp/drupal*
     chown root:root -R "/var/www/$1"
@@ -760,6 +764,7 @@ system)
 	install_locate
 	fix_locale
 	update_locate
+	var_www
     ;;
 htmlsite)
     install_htmlsite $2
