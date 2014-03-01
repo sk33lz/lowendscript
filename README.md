@@ -1,4 +1,4 @@
-##### Currently system, exim4, csf, nginx, mysql, php, htmlsite commands are working. Others are being fixed and don't work.
+##### Currently system, exim4, csf, nginx, mysql, php, htmlsite, drupal6 commands are working. Others are being fixed and don't work.
 
 A simple bash shell script to optimize your Debian or Ubuntu VPS server for serving PHP and MySQL driven website platforms like Drupal and Wordpress.
 
