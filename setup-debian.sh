@@ -324,9 +324,9 @@ function install_wordpress {
     mkdir /tmp/wordpress.$$
     wget -O - http://wordpress.org/latest.tar.gz | \
         tar zxf - -C /tmp/wordpress.$$
-    mv /tmp/wordpress.$$/wordpress "/var/www/$1"
+    mv /tmp/wordpress.$$/wordpress "/usr/share/nginx/www/$1"
     rm -rf /tmp/wordpress.$$
-    chown root:root -R "/var/www/$1"
+    chown root:root -R "/usr/share/nginx/www/$1"
 
     # Setting up the MySQL database
     dbname=`echo $1 | tr . _`
@@ -335,9 +335,9 @@ function install_wordpress {
     # MySQL userid cannot be more than 15 characters long
     userid="${userid:0:15}"
     passwd=`get_password "$userid@mysql"`
-    cp "/var/www/$1/wp-config-sample.php" "/var/www/$1/wp-config.php"
+    cp "/usr/share/nginx/www/$1/wp-config-sample.php" "/usr/share/nginx/www/$1/wp-config.php"
     sed -i "s/database_name_here/$dbname/; s/username_here/$userid/; s/password_here/$passwd/" \
-        "/var/www/$1/wp-config.php"
+        "/usr/share/nginx/www/$1/wp-config.php"
     mysqladmin create "$dbname"
     echo "GRANT ALL PRIVILEGES ON \`$dbname\`.* TO \`$userid\`@localhost IDENTIFIED BY '$passwd';" | \
         mysql
@@ -346,7 +346,7 @@ function install_wordpress {
     cat > "/etc/nginx/sites-enabled/$1.conf" <<END
 server {
     server_name $1;
-    root /var/www/$1;
+    root /usr/share/nginx/www/$1;
     include /etc/nginx/fastcgi_php;
     location / {
         index index.php;
