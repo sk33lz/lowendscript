@@ -322,8 +322,8 @@ function install_wordpress {
 
     # Downloading the WordPress' latest and greatest distribution.
     mkdir /tmp/wordpress.$$
-    wget -O - http://wordpress.org/latest.tar.gz | \
-        tar zxf - -C /tmp/wordpress.$$
+	wget -O - http://wordpress.org/latest.tar.gz | \
+	        tar zxf - -C /tmp/wordpress.$$
     mv /tmp/wordpress.$$/wordpress "/usr/share/nginx/www/$1"
     rm -rf /tmp/wordpress.$$
     chown root:root -R "/usr/share/nginx/www/$1"
