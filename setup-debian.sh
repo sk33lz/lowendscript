@@ -361,10 +361,10 @@ END
 
 function install_htmlsite {
     # Setup folder
-	mkdir /var/www/$1
+	mkdir /usr/share/nginx/www/$1
 	
 	# Setup default index.html file
-	cat > "/var/www/$1/index.html" <<END
+	cat > "/usr/share/nginx/www/$1/index.html" <<END
 Hello World
 END
     
@@ -372,7 +372,7 @@ END
     cat > "/etc/nginx/sites-enabled/$1.conf" <<END
 server {
     server_name $1;
-    root /var/www/$1;
+    root /usr/share/nginx/www/$1;
     include /etc/nginx/fastcgi_php;
     location / {
         index index.php index.html;
