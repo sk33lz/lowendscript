@@ -329,7 +329,7 @@ function install_wordpress {
     wget -O - http://wordpress.org/latest.tar.gz | \
         tar zxf - -C /tmp/wordpress.$$
 	mkdir -p /var/www/$1
-    mv /tmp/wordpress.$$/wordpress/ "/var/www/$1"
+    cp -r /tmp/wordpress.$$/wordpress/ "/var/www/$1"
     rm -rf /tmp/wordpress.$$
     chown root:root -R "/var/www/$1"
 
