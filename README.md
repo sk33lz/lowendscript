@@ -86,6 +86,13 @@ Installs the latest version of Magento Community, the best open source Ecommerce
 Example Command: (Creates a Magento Community installation for example.com in /var/www/vhosts/magento/example.com)
   
     bash setup-debian.sh magento example.com
+	
+#### Install HTML Site
+Creates a directory and sets up the Nginx mapping for the supplied domain name. Also adds a simple index.html file in the domains directory.
+
+Example Command: (Creates HTML site directory for example.com in /usr/share/nginx/www/example.com)
+     
+    bash setup-debian.sh htmlsite example.com
 
 ### SOFTWARE STACK
 ##### Dropbear 
