@@ -323,7 +323,7 @@ END
 }
 
 function install_wordpress {
-# Needs fixing
+# Needs fixing, soon!!!
     check_install wget wget
     if [ -z "$1" ]
     then
