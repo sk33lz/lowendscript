@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ $EUID -ne 0 ]]; then
+echo "This script must be run as root" 1>&2
+   exit 1
+fi
+
 function check_install {
     if [ -z "`which "$1" 2>/dev/null`" ]
     then
@@ -75,6 +80,26 @@ function install_dash {
     ln -s dash /bin/sh
 }
 
+function install_htop {
+    check_install htop htop
+}
+
+function install_smart {
+	check_install smartmontools smartmontools
+}
+
+function install_locate {
+    check_install locate locate
+}
+
+function fix_locale {
+    dpkg-reconfigure locales
+}
+
+function var_www {
+    mkdir -p /var/www/
+}
+
 function install_dropbear {
     check_install dropbear dropbear
     check_install /usr/sbin/xinetd xinetd
@@ -113,31 +138,46 @@ function install_exim4 {
 }
 
 function install_mysql {
-    # Install the MySQL packages
-    check_install mysqld mysql-server
-    check_install mysql mysql-client
 
-    # Install a low-end copy of the my.cnf to disable InnoDB, and then delete
-    # all the related files.
-    invoke-rc.d mysql stop
-    rm -f /var/lib/mysql/ib*
-    cat > /etc/mysql/conf.d/lowendbox.cnf <<END
+	# Install the MySQL packages
+	check_install mysqld mysql-server
+	check_install mysql mysql-client
+
+	# Install a low-end copy of the my.cnf to disable InnoDB
+	invoke-rc.d mysql stop
+	cat > /etc/mysql/conf.d/lowendbox.cnf <<END
+# These values override values from /etc/mysql/my.cnf
+
 [mysqld]
-key_buffer = 8M
+key_buffer = 12M
 query_cache_size = 0
-skip-innodb
-END
-    invoke-rc.d mysql start
+table_cache = 32
 
-    # Generating a new password for the root user.
-    passwd=`get_password root@mysql`
-    mysqladmin password "$passwd"
-    cat > ~/.my.cnf <<END
+init_connect='SET collation_connection = utf8_unicode_ci'
+init_connect='SET NAMES utf8' 
+character-set-server = utf8 
+collation-server = utf8_unicode_ci 
+skip-character-set-client-handshake
+
+default_storage_engine=MyISAM
+skip-innodb
+
+log-slow-queries=/var/log/mysql/slow-queries.log
+
+[client]
+default-character-set = utf8
+END
+	invoke-rc.d mysql start
+
+	# Generating a new password for the root user.
+	passwd=`get_password root@mysql`
+	mysqladmin password "$passwd"
+	cat > ~/.my.cnf <<END
 [client]
 user = root
 password = $passwd
 END
-    chmod 600 ~/.my.cnf
+	chmod 600 ~/.my.cnf
 }
 
 function install_nginx {
@@ -283,6 +323,7 @@ END
 }
 
 function install_wordpress {
+# Needs fixing, soon!!!
     check_install wget wget
     if [ -z "$1" ]
     then
@@ -293,7 +334,8 @@ function install_wordpress {
     mkdir /tmp/wordpress.$$
     wget -O - http://wordpress.org/latest.tar.gz | \
         tar zxf - -C /tmp/wordpress.$$
-    mv /tmp/wordpress.$$/wordpress "/var/www/$1"
+	mkdir -p /var/www/$1
+    mv /tmp/wordpress.$$/wordpress/* "/var/www/$1"
     rm -rf /tmp/wordpress.$$
     chown root:root -R "/var/www/$1"
 
@@ -330,10 +372,10 @@ END
 
 function install_htmlsite {
     # Setup folder
-	mkdir /var/www/$1
+	mkdir /usr/share/nginx/www/$1
 	
 	# Setup default index.html file
-	cat > "/var/www/$1/index.html" <<END
+	cat > "/usr/share/nginx/www/$1/index.html" <<END
 Hello World
 END
     
@@ -341,7 +383,7 @@ END
     cat > "/etc/nginx/sites-enabled/$1.conf" <<END
 server {
     server_name $1;
-    root /var/www/$1;
+    root /usr/share/nginx/www/$1;
     include /etc/nginx/fastcgi_php;
     location / {
         index index.php index.html;
@@ -367,9 +409,9 @@ function install_drupal6 {
 	
     # Downloading the Drupal' latest and greatest distribution.
     mkdir /tmp/drupal.$$
-    wget -O - http://ftp.drupal.org/files/projects/drupal-6.26.tar.gz | \
+    wget -O - http://ftp.drupal.org/files/projects/drupal-6.30.tar.gz | \
         tar zxf - -C /tmp/drupal.$$/
-    mkdir /var/www/$1
+    mkdir -p /var/www/$1
     cp -Rf /tmp/drupal.$$/drupal*/* "/var/www/$1"
     rm -rf /tmp/drupal*
     chown root:root -R "/var/www/$1"
@@ -507,9 +549,9 @@ function install_drupal7 {
 	
     # Downloading the Drupal' latest and greatest distribution.
     mkdir /tmp/drupal.$$
-    wget -O - http://ftp.drupal.org/files/projects/drupal-7.22.tar.gz | \
+    wget -O - http://ftp.drupal.org/files/projects/drupal-7.26.tar.gz | \
         tar zxf - -C /tmp/drupal.$$/
-    mkdir /var/www/$1
+    mkdir -p /var/www/$1
     cp -Rf /tmp/drupal.$$/drupal*/* "/var/www/$1"
     rm -rf /tmp/drupal*
     chown root:root -R "/var/www/$1"
@@ -687,6 +729,16 @@ function update_upgrade {
     apt-get -q -y upgrade
 }
 
+function print_mysql {
+	# print mysql root password after install
+	cat ~/.my.cnf
+}
+
+function update_locate {
+	# print mysql root password after install
+	updatedb
+}
+
 ########################################################################
 # START OF PROGRAM
 ########################################################################
@@ -699,6 +751,7 @@ exim4)
     ;;
 mysql)
     install_mysql
+	print_mysql
     ;;
 nginx)
     install_nginx
@@ -712,6 +765,12 @@ system)
     install_dash
     install_syslogd
     install_dropbear
+	install_htop
+	install_smart
+	install_locate
+	fix_locale
+	update_locate
+	var_www
     ;;
 htmlsite)
     install_htmlsite $2
@@ -725,6 +784,9 @@ drupal7)
 wordpress)
     install_wordpress $2
     ;;
+magento)
+    install_magento $2
+	;;
 *)
     echo 'Usage:' `basename $0` '[option]'
     echo 'Available option:'
