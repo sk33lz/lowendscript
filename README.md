@@ -9,11 +9,11 @@ A simple bash shell script to optimize your Debian or Ubuntu VPS server for serv
 ### INSTALLATION
 Download setup-debian.sh using one of the following commands:
 
-    wget --no-check-certificate https://github.com/dhamaniasad/lowendscript/raw/master/setup-debian.sh
+    wget --no-check-certificate https://github.com/sk33lz/lowendscript/raw/master/setup-debian.sh
 	
 or
 
-    git clone git://github.com/dhamaniasad/lowendscript.git
+    git clone git://github.com/sk33lz/lowendscript.git
 
 ### USAGE
 This script should be run by the root user for maximum compatibility.
